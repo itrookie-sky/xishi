@@ -1,0 +1,202 @@
+body,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+hr,
+p,
+blockquote,
+dl,
+dt,
+dd,
+ul,
+ol,
+li,
+pre,
+form,
+fieldset,
+legend,
+button,
+input,
+textarea,
+th,
+td {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+div {
+    box-sizing: border-box;
+}
+
+body,
+button,
+input,
+select,
+textarea {
+    font: 12px/1.5tahoma, arial, \5b8b\4f53;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-size: 100%;
+}
+
+address,
+cite,
+dfn,
+em,
+var {
+    font-style: normal;
+}
+
+code,
+kbd,
+pre,
+samp {
+    font-family: couriernew, courier, monospace;
+}
+
+small {
+    font-size: 12px;
+}
+
+ul,
+ol {
+    list-style: none;
+}
+
+a {
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+sup {
+    vertical-align: text-top;
+}
+
+sub {
+    vertical-align: text-bottom;
+}
+
+legend {
+    color: #000;
+}
+
+fieldset,
+img {
+    border: 0;
+}
+
+button,
+input,
+select,
+textarea {
+    font-size: 100%;
+}
+
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+input::-webkit-input-placeholder,
+textarea::-webkit-input-placeholder {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+input:-moz-placeholder,
+textarea:-moz-placeholder {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+input::-moz-placeholder,
+textarea::-moz-placeholder {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+input:-ms-input-placeholder,
+textarea:-ms-input-placeholder {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+
+/*设置媒体查询字体*/
+
+html {
+    font-size: 100px;
+}
+
+
+/*媒体查询
+@media only screen and (min-width: 321px) {
+    html {
+        font-size: 88.9px !important;
+    }
+}
+
+@media only screen and (min-width: 361px) {
+    html {
+        font-size: 100px !important;
+    }
+}
+
+@media only screen and (min-width: 376px) {
+    html {
+        font-size: 105px !important;
+    }
+}
+
+@media only screen and (min-width: 415px) {
+    html {
+        font-size: 115px !important;
+    }
+}
+
+@media only screen and (min-width: 769px) {
+    html {
+        font-size: 213.3px !important;
+    }
+}
+
+@media only screen and (min-width: 1025px) {
+    html {
+        font-size: 284.4px !important;
+    }
+}*/
+
+.ver-middle-item {
+    vertical-align: middle;
+}
+
+.ver-middle::after {
+    display: inline-block;
+    height: 100%;
+    width: 1px;
+    background-color: rgba(0, 0, 0, 0);
+}
+
+.pos-center {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.hide {
+    display: none;
+}
+
+.border-0 {
+    border: rgba(255, 255, 255, 0) solid 0.01rem;
+}
