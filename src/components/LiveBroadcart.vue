@@ -51,19 +51,33 @@
           @click="onAnTap"
         >{{va}}</li>
       </ul>
+      <!-- 活动区 -->
+      <div class="active-content">
+        <keep-alive>
+          <component :is="curActiveCpt"></component>
+        </keep-alive>
+      </div>
     </section>
   </div>
 </template>
 <script>
 import videojs from "video.js";
 import Utils from "../js/utils";
+import Chat from "./cpt/Chat.vue";
+import Happy from "./cpt/HappyList.vue";
 export default {
+  components: {
+    Chat,
+    Happy
+  },
   data() {
     return {
       people: "1000万",
-      progress: 3,
+      progress: 30,
+      /**直播功能区 */
       activeNav: ["祝福现场", "幸福时刻"],
-      anSelectIdx: 0
+      anSelectIdx: 0,
+      activeCpts: [Chat, Happy]
     };
   },
   computed: {
@@ -77,6 +91,9 @@ export default {
       return {
         width: this.progressMan
       };
+    },
+    curActiveCpt() {
+      return this.activeCpts[this.anSelectIdx];
     }
   },
   methods: {
@@ -108,6 +125,7 @@ export default {
   width: 100%;
   height: 100vh;
   font-size: 0.2rem;
+  overflow: hidden;
 }
 .live-top {
   width: 100%;
@@ -118,7 +136,7 @@ export default {
   height: 100%;
 }
 .active-container {
-  width: 97.6%;
+  width: 97%;
   height: 66.3%;
   padding: 0 0.04rem 0.04rem 0.04rem;
   border: rgba(0, 0, 0, 0) solid 0.01rem;
@@ -210,8 +228,10 @@ export default {
   .an-item {
     flex: 0 1 30%;
     width: 30%;
+    height: 0.24rem;
+    line-height: 0.24rem;
     background-color: #fff;
-    transition: all .2s ease;
+    transition: all 0.2s ease;
   }
   li:not(:first-child) {
     border-left: 0.05rem solid #e5086a;
@@ -220,6 +240,11 @@ export default {
     width: 70%;
     flex: 1 0 30%;
   }
+}
+.active-content {
+  width: 100%;
+  height: 81.33%;
+  margin-top: 0.05rem;
 }
 </style>
 

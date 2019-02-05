@@ -53,6 +53,9 @@ export default {
   margin-top: 0.15rem;
   font-size: 0.2rem;
 }
+.test-menu li a,.test-menu li a:visited{
+  color: #666;
+}
 .menu {
   position: fixed;
   z-index: 9999999;

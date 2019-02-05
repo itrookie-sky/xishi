@@ -57,6 +57,7 @@ export default {
 <style  scoped>
 .login {
   position: fixed;
+  z-index: 1;
   top: 0;
   left: 0;
   right: 0;
@@ -137,8 +138,8 @@ export default {
   font-size: 0.16rem;
   color: #fff;
 }
-.icon-bofang{
-  height: .6rem;
+.icon-bofang {
+  height: 0.6rem;
 }
 .lab-container {
   position: absolute;
@@ -148,7 +149,6 @@ export default {
   display: flex;
 }
 .guide-container {
-
 }
 </style>
 
