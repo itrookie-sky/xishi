@@ -7,13 +7,14 @@
       <span class="s-pro">奖励</span>
       <span>越丰厚!</span>
     </p>
-    <p class="sign-desc">
+    <p class="sign-desc" v-show="!complete">
       <span>{{info.person[0]}}</span>
       <span>和</span>
       <span>{{info.person[1]}}</span>
       <span>{{info.time}}</span>
       <span>开始</span>
     </p>
+
     <div class="sign-progress">
       <ul class="sp-tabs">
         <li v-for="(val,idx) in progressTabs" :key="idx">{{val}}</li>
@@ -27,8 +28,22 @@
         :show-text="false"
       ></el-progress>
     </div>
-    <div class="sign-form">
-      <el-form :label-position="labelPosition" label-width="1rem" :model="formAlign">
+    <p class="sign-desc-com" v-show="complete">
+      <span>您已经签到成功,</span>
+      <span>请于{{info.time}}</span>
+      <span>到达{{info.address}}参加</span>
+      <span>{{info.person[0]}}</span>
+      <span>和</span>
+      <span>{{info.person[1]}}</span>
+      <span>的婚礼</span>
+    </p>
+    <div class="sign-form" v-show="!complete">
+      <el-form
+        @submit.native.prevent
+        :label-position="labelPosition"
+        label-width="1rem"
+        :model="formAlign"
+      >
         <el-form-item label="姓名" label-width=".6rem">
           <el-row type="flex" justify="space-between">
             <el-col :span="16">
@@ -71,9 +86,12 @@
           </el-radio-group>
         </el-form-item>
       </el-form>
-      <div class="sign-submit-btn" @click="onSubmit($event)">
-        <label>签到</label>
-      </div>
+    </div>
+    <div class="sign-submit-btn" @click="onSubmit($event)" v-show="!complete">
+      <label>签到</label>
+    </div>
+    <div class="sign-submit-btn1" @click="onClose($event)" v-show="complete">
+      <label>关闭</label>
     </div>
   </div>
 </template>
@@ -84,7 +102,8 @@ export default {
     return {
       info: {
         person: ["新新郎", "新新娘"],
-        time: "2017-11-11 10:00"
+        time: "2017-11-11 10:00",
+        address: ""
       },
       progressTabs: ["100", "200", "300", "400"],
       progressCur: 60,
@@ -94,9 +113,10 @@ export default {
         tel: "",
         code: "",
         sex: "",
-        arrive: ""
+        arrive: "1"
       },
-      labelPosition: "left"
+      labelPosition: "left",
+      complete: true
     };
   },
   methods: {
@@ -133,6 +153,10 @@ export default {
   }
   .sign-desc {
     margin-top: 0.1rem;
+  }
+  .sign-desc-com {
+    margin-top: 0.8rem;
+    padding: 0 0.26rem;
   }
   .s-pro {
     background-color: #fff;
@@ -183,6 +207,7 @@ export default {
       padding: 0 0.05rem 0;
       height: 0.26rem;
       line-height: 0.26rem;
+      font-size: 0.14rem;
     }
     .el-input__icon {
       line-height: 0.26rem;
@@ -213,13 +238,17 @@ export default {
       color: #fff;
     }
   }
-  .sign-submit-btn {
+  .sign-submit-btn,
+  .sign-submit-btn1 {
     color: #999;
     margin: 0.25rem auto 0;
     padding: 0.04rem 0;
     background-color: #fff;
     border-radius: 0.04rem;
     width: 1.2rem;
+  }
+  .sign-submit-btn1 {
+    margin: 1rem auto 0;
   }
 }
 </style>

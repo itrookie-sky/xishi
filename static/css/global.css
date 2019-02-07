@@ -200,3 +200,7 @@ html {
 .border-0 {
     border: rgba(255, 255, 255, 0) solid 0.01rem;
 }
+
+.m-top-40 {
+    margin-top: .4rem;
+}

@@ -26,6 +26,7 @@
     </section>
     <rank v-show="showRank" @close="mgrShow" :is-small="true"></rank>
     <sign-in v-show="showSignIn" @close="mgrShow"></sign-in>
+    <hongbao v-show="showHongBao" @close="mgrShow"></hongbao>
   </div>
 </template>
 <script>
@@ -33,16 +34,19 @@ import utils from "../../js/utils";
 import { exists } from "fs";
 import Rank from "./Rank.vue";
 import SignIn from "./SignIn.vue";
+import Hongbao from "./Hongbao.vue";
 export default {
   components: {
     rank: Rank,
-    "sign-in": SignIn
+    "sign-in": SignIn,
+    hongbao: Hongbao
   },
   data() {
     return {
       chatInput: "",
       showRank: false,
-      showSignIn: false
+      showSignIn: false,
+      showHongBao: true
     };
   },
   methods: {
@@ -56,7 +60,9 @@ export default {
     },
     onRenTap(ev) {},
     onLiwuTap(ev) {},
-    onHongBaoTap(ev) {},
+    onHongBaoTap(ev) {
+      this.showHongBao = true;
+    },
     /**聊天相关 */
     onSentTap(ev) {
       utils.log("聊天信息");
@@ -72,6 +78,9 @@ export default {
           break;
         case "signin":
           this.showSignIn = false;
+          break;
+        case "hongbao":
+          this.showHongBao = false;
           break;
       }
     }
