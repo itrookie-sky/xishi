@@ -22,10 +22,17 @@ import 'videojs-contrib-hls'
 
 import '../static/css/iconfont/iconfont.css'
 import axios from 'axios'
+import global from './js/global'
 
+/**微信授权 */
+global.init();
+
+Vue.prototype.global = global;
 Vue.prototype.axios = axios;
 Vue.use(ElementUI);
 Vue.config.productionTip = false
+
+
 
 /* eslint-disable no-new */
 new Vue({
