@@ -26,6 +26,7 @@ td {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    font-family: Microsoft YaHei;
 }
 
 div {
@@ -204,3 +205,4 @@ html {
 .m-top-40 {
     margin-top: .4rem;
 }
+

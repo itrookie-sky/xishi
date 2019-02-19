@@ -4,7 +4,93 @@ $xs-color-font:#d80078;
 $xs-color-blue:#409EFF;
 $xs-color-gray:#ebeef5;
 $xs-color-gray1:#f0f0f2;
+$xs-color-gray2:#939393;
+$xs-color-gray3:#f1f1f1;
 $xs-border-0:1px solid rgba(0, 0, 0, 0);
 $xs-border-1:1px solid rgba(0, 0, 0, 1);
 $input-height:.3rem;
 $input-num-h:.4rem;
+
+/**重置element-UI 样式*/
+
+.el-form-item {
+    margin-bottom: 0.1rem;
+}
+
+.el-input__inner {
+    padding: 0 0.05rem 0;
+    height: $input-height;
+    line-height: $input-height;
+    font-size: 0.14rem;
+}
+
+.el-input__icon {
+    line-height: $input-height;
+}
+
+.el-form-item__content {
+    line-height: $input-height;
+}
+
+.el-input--suffix {
+    padding: 0;
+    font-size: 0.16rem;
+}
+
+.el-form-item__label {
+    font-size: 0.16rem;
+    color: #fff;
+    line-height: $input-height;
+}
+
+.el-radio__label {
+    font-size: 0.1rem;
+    padding-left: 0.03rem;
+}
+
+.el-radio-group {
+    width: 100%;
+}
+
+.el-radio {
+    color: #333;
+}
+
+.el-radio__input.is-checked+.el-radio__label {
+    color: #fff;
+}
+
+.el-radio__inner {
+    width: 0.13rem;
+    height: 0.13rem;
+}
+
+.el-input-number {
+    width: 100%;
+    .el-input {
+        line-height: $input-num-h;
+        height: $input-num-h;
+    }
+    .el-input__inner {
+        height: $input-num-h;
+    }
+}
+
+.el-input-number__increase,
+.el-input-number__decrease {
+    width: 0.2rem;
+    line-height: 0.13rem;
+    right: 0;
+}
+
+.el-input {
+    line-height: $input-height;
+}
+
+.el-input-number__increase {
+    top: .026rem;
+}
+
+.el-input-number__decrease {
+    bottom: 0;
+}

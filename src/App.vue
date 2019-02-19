@@ -18,7 +18,7 @@ export default {
   data: function() {
     return {
       testList: g.testMenu,
-      showMenu: true
+      showMenu: false
     };
   },
   methods: {
@@ -53,7 +53,8 @@ export default {
   margin-top: 0.15rem;
   font-size: 0.2rem;
 }
-.test-menu li a,.test-menu li a:visited{
+.test-menu li a,
+.test-menu li a:visited {
   color: #666;
 }
 .menu {

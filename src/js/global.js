@@ -1,8 +1,10 @@
 import wx from './weixin'
 import utils from './utils'
+import config from './config'
+import c from './const'
+import axios from 'axios'
 
 const Global = {
-    openId: "",
     testMenu: [{
             link: "/",
             desc: "登录页",
@@ -13,7 +15,7 @@ const Global = {
         }, {
             link: "/demo",
             desc: "示例页",
-        },{
+        }, {
             link: "/money",
             desc: "余额",
         }
@@ -51,16 +53,30 @@ const Global = {
             ]
         }
     ],
+    openId: "",
+    code: "",
+    utils: utils,
+    config: config,
 
     init() {
-        this.getCode();
+        this.login();
+    },
+    login() {
+        let openId = utils.storage.getData(c.openId);
+        if (openId) {
+            this.openId = openId;
+        } else {
+            this.getCode();
+        }
     },
     getCode() {
         let code = utils.getUrlParams("code");
         if (code) {
             //axios->成功 缓存openid 失败
+            utils.log("code 获取成功", code);
+            this.code = code;
         } else {
-            // wx.wxAccess();
+            wx.wxAccess();
         }
     }
 };

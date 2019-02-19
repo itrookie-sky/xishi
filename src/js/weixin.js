@@ -33,13 +33,21 @@ class Weixin {
     }
 
     getAccessCode(appid, url) {
+            /**
+             * https://open.weixin.qq.com/connect/oauth2/authorize?
+             * appid=wxc9773ab548d317cb
+             * &redirect_uri=http%3A%2F%2Fdemo.csjlive.com%2Fa.html
+             * &response_type=code
+             * &scope=snsapi_userinfo
+             * &state=STATE#wechat_redirect
+             */
             location.href = "" +
                 "https://open.weixin.qq.com/connect/oauth2/authorize?" +
                 "appid=" + appid +
                 "&redirect_uri=" + encodeURIComponent(url) +
                 "&response_type=code" +
                 "&scope=snsapi_userinfo" +
-                "&state=1" +
+                "&state=STATE" +
                 "#wechat_redirect";
         }
         /**配置 */

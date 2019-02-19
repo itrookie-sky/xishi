@@ -61,7 +61,7 @@
          let url = window.location[type];
          let re = new RegExp("" + val + "=([^&?]*)", "ig");
          let pa = ((url.match(re)) ? (url.match(re)[0].substr(val.length + 1)) : null);
-         console.log(val + ":" + pa);
+         this.log(val + ":" + pa);
          return pa;
      },
      storage: new Storage()

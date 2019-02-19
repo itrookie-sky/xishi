@@ -159,8 +159,10 @@ export default {
       line-height: $input-height;
     }
     .el-input-number__increase {
+      top:.026rem;
     }
     .el-input-number__decrease {
+      bottom: 0;
     }
     .hb-send-btn {
       color: $xs-color-font;

@@ -27,6 +27,8 @@
     <rank v-show="showRank" @close="mgrShow" :is-small="true"></rank>
     <sign-in v-show="showSignIn" @close="mgrShow"></sign-in>
     <hongbao v-show="showHongBao" @close="mgrShow"></hongbao>
+    <chat-hongbao v-show="showChatHongbao" @close="mgrShow"></chat-hongbao>
+    <give v-show="showGive" @close="mgrShow"></give>
   </div>
 </template>
 <script>
@@ -35,18 +37,24 @@ import { exists } from "fs";
 import Rank from "./Rank.vue";
 import SignIn from "./SignIn.vue";
 import Hongbao from "./Hongbao.vue";
+import ChatHongbao from "./ChatHongbao.vue";
+import Give from "./Give.vue";
 export default {
   components: {
     rank: Rank,
     "sign-in": SignIn,
-    hongbao: Hongbao
+    hongbao: Hongbao,
+    "chat-hongbao": ChatHongbao,
+    give: Give
   },
   data() {
     return {
       chatInput: "",
       showRank: false,
       showSignIn: false,
-      showHongBao: true
+      showHongBao: false,
+      showChatHongbao: false,
+      showGive: false
     };
   },
   methods: {
@@ -58,8 +66,12 @@ export default {
     onSignInTap(ev) {
       this.showSignIn = true;
     },
-    onRenTap(ev) {},
-    onLiwuTap(ev) {},
+    onRenTap(ev) {
+      this.$router.replace("/money");
+    },
+    onLiwuTap(ev) {
+      this.showGive = true;
+    },
     onHongBaoTap(ev) {
       this.showHongBao = true;
     },
@@ -81,6 +93,12 @@ export default {
           break;
         case "hongbao":
           this.showHongBao = false;
+          break;
+        case "chatHongbao":
+          this.showChatHongbao = false;
+          break;
+        case "give":
+          this.showGive = false;
           break;
       }
     }
@@ -130,6 +148,7 @@ export default {
     .chat-inner {
       width: 100%;
       height: 300%;
+      background-color: $xs-color-gray3;
     }
   }
   /**聊天输入区*/

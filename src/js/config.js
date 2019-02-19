@@ -3,8 +3,9 @@
      ip: "",
      port: "",
      isDebug: true,
-     /**==微信================= */
-     appid: "wx41e6ffacc036a4da",
+     /**==??================= */
+     appid: "wxc9773ab548d317cb",
+     appsecret: "3acae05dcee6d22c5cfb67f784bca7f1",
  };
 
  export default AppConfig;

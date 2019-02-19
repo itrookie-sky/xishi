@@ -2,7 +2,7 @@
   <div class="money-container">
     <el-row type="flex" class="btn-back">
       <el-col :span="6">
-        <el-button size="mini" type="info">返回</el-button>
+        <el-button size="mini" type="info" @click="onBackTap($event)">返回</el-button>
       </el-col>
     </el-row>
     <div class="money-my">
@@ -15,10 +15,10 @@
       </div>
       <el-row type="flex" justify="center">
         <el-col :span="6">
-          <el-button type="primary" size="mini">提现</el-button>
+          <el-button type="primary" size="mini" @click="onGetMoneyTap($event)">提现</el-button>
         </el-col>
         <el-col :span="6">
-          <el-button type="primary" size="mini">余额详情</el-button>
+          <el-button @click="onRecordTap($event)" type="primary" size="mini">余额详情</el-button>
         </el-col>
       </el-row>
     </div>
@@ -43,27 +43,33 @@
         </div>
         <el-row type="flex" justify="center" v-show="showAlertBtn">
           <el-col :span="6">
-            <el-button type="primary" size="mini">确认</el-button>
+            <el-button type="primary" size="mini" @click="onTrue($event)">确认</el-button>
           </el-col>
           <el-col :span="6">
-            <el-button type="primary" size="mini">取消</el-button>
+            <el-button type="primary" size="mini" @click="onPass($event)">取消</el-button>
           </el-col>
         </el-row>
       </div>
     </div>
-    <div class="money-record" v-show="showRecord">
-      <ul class="mr-list">
-        <li v-for="(item,idx) in record" :key="idx">
-          <p>{{item.timestamp}}</p>
-          <p>
-            <span>从</span>
-            <span>{{item.name}}</span>
-            <span>红包抢到</span>
-            <span>{{item.money}}</span>
-            <span>元</span>
-          </p>
-        </li>
-      </ul>
+    <div class="money-record" v-show="showRecord" @click.capture.stop="onMoneyRecordTap($event)">
+      <div class="mr-outter">
+        <ul class="mr-list">
+          <li
+            v-for="(item,idx) in record"
+            :key="idx"
+            :class="{'color-gray':item.state==1,'color-red':item.state==2}"
+          >
+            <p>{{item.timestamp}}</p>
+            <p>
+              <span>从</span>
+              <span>{{item.name}}</span>
+              <span>红包抢到</span>
+              <span>{{item.money}}</span>
+              <span>元</span>
+            </p>
+          </li>
+        </ul>
+      </div>
     </div>
   </div>
 </template>
@@ -84,11 +90,66 @@ export default {
         {
           name: "三个字",
           timestamp: "2018-11-11 12:12",
-          money: "999.99"
+          money: "999.99",
+          state: 1
+        },
+        {
+          name: "三个字",
+          timestamp: "2018-11-11 12:12",
+          money: "999.99",
+          state: 1
+        },
+        {
+          name: "三个字",
+          timestamp: "2018-11-11 12:12",
+          money: "999.99",
+          state: 1
+        },
+        {
+          name: "三个字",
+          timestamp: "2018-11-11 12:12",
+          money: "999.99",
+          state: 1
+        },
+        {
+          name: "三个字",
+          timestamp: "2018-11-11 12:12",
+          money: "999.99",
+          state: 1
+        },
+        {
+          name: "三个字",
+          timestamp: "2018-11-11 12:12",
+          money: "999.99",
+          state: 1
+        },
+        {
+          name: "三个字",
+          timestamp: "2018-11-11 12:12",
+          money: "999.99",
+          state: 1
+        },
+        {
+          name: "三个字",
+          timestamp: "2018-11-11 12:12",
+          money: "999.99",
+          state: 1
+        },
+        {
+          name: "三个字",
+          timestamp: "2018-11-11 12:12",
+          money: "999.99",
+          state: 1
+        },
+        {
+          name: "三个字",
+          timestamp: "2018-11-11 12:12",
+          money: "999.99",
+          state: 2
         }
       ],
       state: 1,
-      showRecord: true
+      showRecord: false
     };
   },
   computed: {
@@ -105,7 +166,24 @@ export default {
       return this.state == 2;
     }
   },
-  methods: {}
+  methods: {
+    onRecordTap(ev) {
+      this.showRecord = true;
+    },
+    onMoneyRecordTap(ev) {
+      this.showRecord = false;
+    },
+    onGetMoneyTap(ev) {
+      this.state = 2;
+    },
+    onBackTap(ev) {
+      this.$router.replace("/live");
+    },
+    onTrue(ev) {},
+    onPass(ev) {
+      this.state = 1;
+    }
+  }
 };
 </script>
 <style lang="scss" >
@@ -188,6 +266,42 @@ export default {
           margin: 0.3rem auto 0.1rem;
         }
       }
+    }
+  }
+  .money-record {
+    position: fixed;
+    top: 25%;
+    left: 10%;
+    right: 10%;
+    height: 3rem;
+    background-color: #fff;
+    border: 0.015rem solid $xs-color-theme1;
+    border-radius: 0.05rem;
+    padding: 0.2rem 0 0.24rem 0.24rem;
+    z-index: 6;
+    text-align: left;
+    font-size: 0.14rem;
+
+    .mr-outter {
+      width: 100%;
+      height: 100%;
+      overflow-x: hidden;
+      overflow-y: scroll;
+      .mr-list {
+        li {
+          margin-top: 0.1rem;
+          :nth-child(2) {
+            font-size: 0.13rem;
+          }
+        }
+      }
+    }
+
+    .color-gray {
+      color: $xs-color-gray2;
+    }
+    .color-red {
+      color: $xs-color-font;
     }
   }
 }

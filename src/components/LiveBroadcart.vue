@@ -136,7 +136,7 @@ export default {
   height: 100%;
 }
 .active-container {
-  width: 97%;
+  width: 97.3%;
   height: 66.3%;
   padding: 0 0.04rem 0.04rem 0.04rem;
   border: rgba(0, 0, 0, 0) solid 0.01rem;

@@ -22,7 +22,7 @@
       <el-progress
         class="sp-progress"
         :text-inside="true"
-        :stroke-width="18"
+        :stroke-width="21"
         :percentage="progressCur"
         status="success"
         :show-text="false"
@@ -116,7 +116,7 @@ export default {
         arrive: "1"
       },
       labelPosition: "left",
-      complete: true
+      complete: false
     };
   },
   methods: {
@@ -134,7 +134,7 @@ export default {
   position: fixed;
   width: 94%;
   height: 4.5rem;
-  top: 15%;
+  bottom: 10%;
   left: 50%;
   transform: translateX(-50%);
   z-index: 6;
@@ -169,11 +169,11 @@ export default {
     width: 84%;
     margin: 0.4rem auto 0;
     .sp-tabs {
-      display: flex;
-      width: 100%;
       position: absolute;
       z-index: 6;
       top: -0.01rem;
+      display: flex;
+      width: 100%;
       > li {
         flex: 1 0 25%;
         border: 0.01rem solid #fff;
@@ -181,7 +181,6 @@ export default {
       }
     }
     .sp-progress {
-      height: 100%;
       .el-progress-bar__outer {
         border-radius: 0.03rem;
         background-color: rgba(0, 0, 0, 0);
