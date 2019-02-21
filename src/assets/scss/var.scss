@@ -10,6 +10,8 @@ $xs-border-0:1px solid rgba(0, 0, 0, 0);
 $xs-border-1:1px solid rgba(0, 0, 0, 1);
 $input-height:.3rem;
 $input-num-h:.4rem;
+$border-radius-bottom:0 0 0.05rem 0.05rem;
+$border-radius-all:0.05rem;
 
 /**重置element-UI 样式*/
 
@@ -20,7 +22,7 @@ $input-num-h:.4rem;
 .el-input__inner {
     padding: 0 0.05rem 0;
     height: $input-height;
-    line-height: $input-height;
+    // line-height: $input-height;
     font-size: 0.14rem;
 }
 
@@ -65,7 +67,7 @@ $input-num-h:.4rem;
     height: 0.13rem;
 }
 
-.el-input-number {
+.el-input-number.is-controls-right {
     width: 100%;
     .el-input {
         line-height: $input-num-h;
@@ -74,23 +76,20 @@ $input-num-h:.4rem;
     .el-input__inner {
         height: $input-num-h;
     }
-}
-
-.el-input-number__increase,
-.el-input-number__decrease {
-    width: 0.2rem;
-    line-height: 0.13rem;
-    right: 0;
+    .el-input-number__increase,
+    .el-input-number__decrease {
+        width: 0.2rem;
+        height: 50%;
+        right: 0;
+    }
+    .el-input-number__increase {
+        top: 1px;
+    }
+    .el-input-number__decrease {
+        bottom: 0;
+    }
 }
 
 .el-input {
     line-height: $input-height;
-}
-
-.el-input-number__increase {
-    top: .026rem;
-}
-
-.el-input-number__decrease {
-    bottom: 0;
 }

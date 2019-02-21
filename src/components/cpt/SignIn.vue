@@ -1,7 +1,7 @@
 <template>
   <div class="signin-container">
     <h3>签到助力</h3>
-    <div class="sign-close iconfont icon-iconclose" @click="onClose($event)"></div>
+    <div class="sign-close iconfont icon-cha" @click="onClose($event)"></div>
     <p class="sign-desc">
       <span>签到人数越多,新人得到</span>
       <span class="s-pro">奖励</span>
@@ -139,6 +139,7 @@ export default {
   transform: translateX(-50%);
   z-index: 6;
   background-color: $xs-color-theme1;
+  border-radius: $border-radius-all;
   color: #fff;
   font-size: 0.16rem;
   > h3 {

@@ -33,7 +33,7 @@
       </div>
     </div>
     <div class="rank-all" v-else>
-      <div class="ra-close-btn iconfont icon-guanbi2" @click="onClose($event)"></div>
+      <div class="ra-close-btn iconfont icon-cha" @click="onClose($event)"></div>
       <el-tabs v-model="activeName" type="border-card" @tab-click="handleClick">
         <el-tab-pane label="全部排名" name="first">
           <div class="rank-item" v-for="(val,idx) in test" :key="idx">
@@ -115,6 +115,7 @@ export default {
   width: 100%;
   height: 100%;
   z-index: 6;
+  border-radius: $border-radius-all;
   .rank-small {
     position: absolute;
     z-index: 6;
@@ -196,7 +197,7 @@ export default {
     .ra-close-btn {
       position: absolute;
       top: 0.04rem;
-      right: .06rem;
+      right: 0.06rem;
       color: $xs-color-font;
       z-index: 6;
     }

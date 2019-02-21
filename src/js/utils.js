@@ -36,6 +36,7 @@
      }
  }
  const Utils = {
+     storage: new Storage(),
      test: function() {
          this.log("utils install success", "arg2");
      },
@@ -63,8 +64,7 @@
          let pa = ((url.match(re)) ? (url.match(re)[0].substr(val.length + 1)) : null);
          this.log(val + ":" + pa);
          return pa;
-     },
-     storage: new Storage()
+     }
  };
 
  export default Utils;

@@ -1,7 +1,7 @@
 import wx from './weixin'
 import utils from './utils'
 import config from './config'
-import c from './const'
+import { localKey } from './const.js'
 import axios from 'axios'
 
 const Global = {
@@ -59,10 +59,10 @@ const Global = {
     config: config,
 
     init() {
-        this.login();
+        // this.login();
     },
     login() {
-        let openId = utils.storage.getData(c.openId);
+        let openId = utils.storage.getData(localKey.openId);
         if (openId) {
             this.openId = openId;
         } else {

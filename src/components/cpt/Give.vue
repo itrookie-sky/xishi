@@ -101,6 +101,7 @@ export default {
   height: 4.5rem;
   background-color: $xs-color-theme1;
   border: $xs-border-0;
+  border-radius: $border-radius-all;
   color: #fff;
   font-size: 0.14rem;
   .border-select {

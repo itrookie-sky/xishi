@@ -1,6 +1,6 @@
 <template>
   <div class="hongbao-container">
-    <div class="hongbao-close iconfont icon-iconclose" @click="onClose($event)"></div>
+    <div class="hongbao-close iconfont icon-cha" @click="onClose($event)"></div>
     <div class="hb-top">
       <el-carousel indicator-position="outside" height="1.2rem">
         <el-carousel-item v-for="item in 4" :key="item">
@@ -74,13 +74,15 @@ export default {
 };
 </script>
 <style lang="scss">
+@import url(../../assets/scss/var.scss);
 .hongbao-container {
   position: fixed;
-  top: 30%;
+  bottom: 10%;
   left: 50%;
   z-index: 6;
   transform: translateX(-50%);
   background-color: $xs-color-theme1;
+  border-radius: $border-radius-all;
   width: 94%;
   min-height: 4rem;
   .hongbao-close {
@@ -97,72 +99,6 @@ export default {
     margin: 0.2rem auto 0rem;
     .row-bg {
       margin-top: 0.1rem;
-    }
-    .el-form-item {
-      margin-bottom: 0.1rem;
-    }
-    .el-input__inner {
-      padding: 0 0.05rem 0;
-      height: $input-height;
-      line-height: $input-height;
-      font-size: 0.14rem;
-    }
-    .el-input__icon {
-      line-height: $input-height;
-    }
-    .el-form-item__content {
-      line-height: $input-height;
-    }
-    .el-input--suffix {
-      padding: 0;
-      font-size: 0.16rem;
-    }
-    .el-form-item__label {
-      font-size: 0.16rem;
-      color: #fff;
-      line-height: $input-height;
-    }
-    .el-radio__label {
-      font-size: 0.1rem;
-      padding-left: 0.03rem;
-    }
-    .el-radio-group {
-      width: 100%;
-    }
-    .el-radio {
-      color: #333;
-    }
-    .el-radio__input.is-checked + .el-radio__label {
-      color: #fff;
-    }
-    .el-radio__inner {
-      width: 0.13rem;
-      height: 0.13rem;
-    }
-    .el-input-number {
-      width: 100%;
-      .el-input {
-        line-height: $input-num-h;
-        height: $input-num-h;
-      }
-      .el-input__inner {
-        height: $input-num-h;
-      }
-    }
-    .el-input-number__increase,
-    .el-input-number__decrease {
-      width: 0.2rem;
-      line-height: 0.13rem;
-      right: 0;
-    }
-    .el-input {
-      line-height: $input-height;
-    }
-    .el-input-number__increase {
-      top:.026rem;
-    }
-    .el-input-number__decrease {
-      bottom: 0;
     }
     .hb-send-btn {
       color: $xs-color-font;

@@ -111,6 +111,7 @@ export default {
   width: 100%;
   height: 100%;
   background-color: #fff;
+  border-radius: $border-radius-bottom;
   > .iconfont {
     position: absolute;
     color: $xs-color-font;
@@ -160,6 +161,7 @@ export default {
     bottom: 0;
     height: 0.36rem;
     width: 100%;
+    border-radius: $border-radius-bottom;
     .cf-in {
       flex: 1 1 70%;
       height: 90%;
@@ -171,9 +173,11 @@ export default {
     }
     .cf-sent {
       position: absolute;
+      width: 0.213rem;
+      height: 0.213rem;
       top: 50%;
       right: 27%;
-      transform: translateY(-38%);
+      transform: translateY(-50%);
     }
     .cf-exp,
     .cf-camera,
