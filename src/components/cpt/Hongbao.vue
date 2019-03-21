@@ -1,13 +1,13 @@
 <template>
   <div class="hongbao-container">
     <div class="hongbao-close iconfont icon-cha" @click="onClose($event)"></div>
-    <div class="hb-top">
+    <!-- <div class="hb-top">
       <el-carousel indicator-position="outside" height="1.2rem">
         <el-carousel-item v-for="item in 4" :key="item">
           <h3>{{ item }}</h3>
         </el-carousel-item>
       </el-carousel>
-    </div>
+    </div> -->
     <div class="hb-content">
       <el-row type="flex" class="row-bg" justify="center">
         <el-col :span="24">
@@ -84,7 +84,7 @@ export default {
   background-color: $xs-color-theme1;
   border-radius: $border-radius-all;
   width: 94%;
-  min-height: 4rem;
+  min-height: 2.6rem;
   .hongbao-close {
     position: absolute;
     z-index: 6;

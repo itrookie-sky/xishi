@@ -1,11 +1,23 @@
  var AppConfig = {
      version: "1.0.1",
-     ip: "",
+     ip: "http://demo.csjlive.com",
      port: "",
      isDebug: true,
-     /**==??================= */
+     /**微信appid*/
      appid: "wxc9773ab548d317cb",
+     /**微信秘钥 */
      appsecret: "3acae05dcee6d22c5cfb67f784bca7f1",
+     /**网易appid */
+     wyAppid: "fd245094b3a2ef23917eb657f702b72b",
+     /**网易云秘钥 */
+     wySecret: "b172795007e6",
+     //地址相关
+     /**内容分发 */
+     getUserInfo: "/v1/user/getWxUser",
+
+     getUrl(path) {
+         return this.ip + path;
+     }
  };
 
  export default AppConfig;

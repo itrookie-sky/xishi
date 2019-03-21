@@ -2,7 +2,7 @@ import wx from './weixin'
 import utils from './utils'
 import config from './config'
 import { localKey } from './const.js'
-import axios from 'axios'
+import { post } from './http/http.js'
 
 const Global = {
     testMenu: [{
@@ -57,10 +57,12 @@ const Global = {
     code: "",
     utils: utils,
     config: config,
+    userInfo: null,
 
     init() {
-        // this.login();
+        this.login();
     },
+
     login() {
         let openId = utils.storage.getData(localKey.openId);
         if (openId) {
@@ -69,12 +71,26 @@ const Global = {
             this.getCode();
         }
     },
+
     getCode() {
+        let self = this;
         let code = utils.getUrlParams("code");
         if (code) {
             //axios->成功 缓存openid 失败
             utils.log("code 获取成功", code);
             this.code = code;
+            post(config.getUrl(config.getUserInfo), {
+                wxCode: code
+            }).then(function(resp) {
+                utils.log("微信code发送成功", resp);
+                if (resp.success) {
+                    self.userInfo = JSON.parse(resp.data);
+                } else {
+                    console.warn("获取用户信息失败");
+                }
+            }).catch(function(err) {
+                utils.log("失败", err)
+            });
         } else {
             wx.wxAccess();
         }

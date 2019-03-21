@@ -21,14 +21,19 @@ import 'video.js/dist/video-js.css'
 import 'videojs-contrib-hls'
 
 import '../static/css/iconfont/iconfont.css'
-import axios from 'axios'
+import { post, fetch, patch, put } from './js/http/http.js'
 import global from './js/global'
+import chat from './js/chat/chat.js'
 
 /**微信授权 */
 global.init();
 
+Vue.prototype.$post = post;
+Vue.prototype.$fetch = fetch;
+Vue.prototype.$patch = patch;
+Vue.prototype.$put = put;
+
 Vue.prototype.global = global;
-Vue.prototype.axios = axios;
 Vue.use(ElementUI);
 Vue.config.productionTip = false
 

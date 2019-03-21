@@ -7,7 +7,10 @@
     <div class="cm-liwu iconfont icon-liwu2" @click="onLiwuTap($event)"></div>
     <div class="cm-hongbao iconfont icon-ai-hongbao" @click="onHongBaoTap($event)"></div>
     <section class="chat-outter">
-      <div class="chat-inner"></div>
+      <div class="chat-inner">
+        <chat-item></chat-item>
+        <chat-item></chat-item>
+      </div>
     </section>
     <!-- 聊天输入 -->
     <section class="chat-func">
@@ -39,13 +42,15 @@ import SignIn from "./SignIn.vue";
 import Hongbao from "./Hongbao.vue";
 import ChatHongbao from "./ChatHongbao.vue";
 import Give from "./Give.vue";
+import ChatItem from "./ChatItem.vue";
 export default {
   components: {
     rank: Rank,
     "sign-in": SignIn,
     hongbao: Hongbao,
     "chat-hongbao": ChatHongbao,
-    give: Give
+    give: Give,
+    "chat-item": ChatItem
   },
   data() {
     return {
@@ -146,10 +151,10 @@ export default {
     bottom: 0.36rem;
     overflow-y: scroll;
     overflow-x: none;
+    background-color: $xs-color-gray3;
     .chat-inner {
       width: 100%;
-      height: 300%;
-      background-color: $xs-color-gray3;
+      min-height: 120%;
     }
   }
   /**聊天输入区*/

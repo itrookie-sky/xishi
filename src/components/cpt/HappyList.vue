@@ -8,7 +8,7 @@ export default {};
 .happy-container {
   width: 100%;
   height: 100%;
-  background-color: #fff;
+  background-color:$xs-color-theme;
   border-radius: $border-radius-bottom;
 }
 </style>

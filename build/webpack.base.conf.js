@@ -77,7 +77,12 @@ module.exports = {
             {
                 test: /\.scss$/,
                 loaders: ["style-loader", "css-loader", "sass-loader"]
-            }
+            }/*,
+            {
+                test: /\.js$/,
+                loader: 'babel-loader',
+                exclude: /NIM_Web_SDK_*\.js/
+            }*/
         ]
     },
     node: {
