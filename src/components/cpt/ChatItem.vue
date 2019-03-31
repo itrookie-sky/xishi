@@ -12,7 +12,7 @@
         <p class="hb-desc">{{hongbaoDesc}}</p>
       </div>
       <div class="chat-img" v-show="state==3||state==4||state==5">
-        <img src="../../assets/img/effect/effect_05.png">
+        <img :src="testSrc">
       </div>
     </div>
   </div>
@@ -24,11 +24,12 @@ export default {
       /**
        * 1.文本 2.红包 3.图片 4.特效 5.gif图
        */
-      state: 4,
+      state: 2,
       headSrc: "../../assets/img/effect_05.png",
       src: "",
       text: "测试文本",
-      hongbaoDesc: "新人专属"
+      hongbaoDesc: "新人专属",
+      testSrc: require("../../assets/img/effect/effect_05.png")
     };
   },
   methods: {
@@ -55,7 +56,7 @@ export default {
   }
   .ci-outter {
     position: relative;
-    padding: 0.08rem 0.08rem;
+    padding: 0.05rem;
     margin-left: 0.15rem;
     flex: 0 0 auto;
     background-color: $xs-color-theme;

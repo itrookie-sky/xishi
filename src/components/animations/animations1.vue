@@ -42,7 +42,12 @@
         <img class="tail" src="../../assets/img/effect/animations/effect_01_02.png">
       </div>
     </div>
-    <div class="people"></div>
+    <div class="people">
+      <div class="people-container">
+        <img class="men" src="../../assets/img/effect/animations/effect_men.png">
+        <img class="women" src="../../assets/img/effect/animations/effect_women.png">
+      </div>
+    </div>
   </div>
 </template>
 <script>
@@ -139,11 +144,31 @@ $meteor-slow: 3s;
   }
   .people {
     z-index: 2;
+    .people-container {
+      position: absolute;
+      display: flex;
+      align-items: center;
+      bottom: 0.2rem;
+      left: 50%;
+      transform: translate(-50%);
+      z-index: inherit;
+      .men,
+      .women {
+        width: 1.2rem;
+        bottom: 0rem;
+      }
+      .men {
+        left: 0;
+      }
+      .women {
+        left: 0.88rem;
+      }
+    }
   }
 }
 @keyframes meteor {
   0% {
-    transform: translate(500%);
+    transform: translate(600%);
     opacity: 1;
   }
   50% {

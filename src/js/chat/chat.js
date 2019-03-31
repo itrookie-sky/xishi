@@ -11,9 +11,18 @@ export class Opation {
     nosScenes = Infinity;
     chatroomId = '';
     chatroomAddresses = [];
-    
+    /**连接成功 */
+    onconnect;
+    /**断开连接 */
+    ondisconnect;
+    /**错误 */
+    onerror;
+    /**消息 */
+    onmsgs;
 }
 
-export function Chatroom(opation) {
-    
+export var opation = new Opation();
+
+export function chatInstance(opation) {
+    Chatroom.getInstance(opation);
 }

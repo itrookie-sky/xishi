@@ -32,7 +32,7 @@ exports.cssLoaders = function(options) {
     var px2remLoader = {
             loader: 'px2rem-loader',
             options: {
-                remUnit: 75 // (这里是指设计稿的宽度为 750 / 10)
+                remUnit: 100 // (这里是指设计稿的宽度为 750 / 10)
             }
         }
         // generate loader string to be used with extract text plugin

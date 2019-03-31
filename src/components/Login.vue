@@ -33,6 +33,7 @@
 import utils from "../js/utils.js";
 import guide from "@/components/GuideSelect";
 import g from "../js/global.js";
+import conf from "../js/config.js";
 export default {
   components: {
     "guide-lab-list": guide
@@ -47,8 +48,22 @@ export default {
   methods: {
     onLogin: function(ev) {
       utils.log(this.password);
-      this.password = "";
-      this.logined = true;
+      if (this.password == "") return;
+      this.$post(conf.getUrl(conf.login), {
+        openId: g.openId,
+        liveId: g.liveId,
+        password: this.password
+      })
+        .then(function(resp) {
+          if (resp.status == 200) {
+            this.logined = true;
+          } else {
+            utils.log("请求失败", resp.status);
+          }
+        })
+        .catch(function(err) {
+          utils.log(err);
+        });
     }
   }
 };

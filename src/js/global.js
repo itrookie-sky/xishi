@@ -3,6 +3,7 @@ import utils from './utils'
 import config from './config'
 import { localKey } from './const.js'
 import { post } from './http/http.js'
+import Utils from './utils';
 
 const Global = {
     testMenu: [{
@@ -58,8 +59,10 @@ const Global = {
     utils: utils,
     config: config,
     userInfo: null,
+    liveId: "",
 
     init() {
+        this.liveId = Utils.getUrlParams("liveid");
         this.login();
     },
 
@@ -83,8 +86,8 @@ const Global = {
                 wxCode: code
             }).then(function(resp) {
                 utils.log("微信code发送成功", resp);
-                if (resp.success) {
-                    self.userInfo = JSON.parse(resp.data);
+                if (resp.data.success) {
+                    self.userInfo = resp.data.data;
                 } else {
                     console.warn("获取用户信息失败");
                 }

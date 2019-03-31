@@ -13,8 +13,11 @@
      wySecret: "b172795007e6",
      //地址相关
      /**内容分发 */
+     /**获取用户信息 */
      getUserInfo: "/v1/user/getWxUser",
-
+     /**登录 */
+     login: "/v1/user/login",
+     
      getUrl(path) {
          return this.ip + path;
      }
