@@ -79,7 +79,7 @@ export default {
   position: fixed;
   bottom: 10%;
   left: 50%;
-  z-index: 6;
+  z-index: 99999;
   transform: translateX(-50%);
   background-color: $xs-color-theme1;
   border-radius: $border-radius-all;

@@ -56,10 +56,11 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-$time-end: 8s;
+$time-end: 3s;
 $meteor-normal: 2s;
 $meteor-fast: 1s;
 $meteor-slow: 3s;
+$move-time: 0;
 .an1 {
   position: relative;
   width: 100%;
@@ -152,6 +153,13 @@ $meteor-slow: 3s;
       left: 50%;
       transform: translate(-50%);
       z-index: inherit;
+      opacity: 0;
+      animation-name: show_people;
+      animation-duration: 0.5s;
+      animation-timing-function: ease;
+      animation-iteration-count: 1;
+      animation-delay: $time-end;
+      animation-fill-mode: forwards;
       .men,
       .women {
         width: 1.2rem;
@@ -177,6 +185,14 @@ $meteor-slow: 3s;
   100% {
     transform: translate(0rem);
     opacity: 0;
+  }
+}
+@keyframes show_people {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
   }
 }
 </style>

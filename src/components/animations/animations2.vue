@@ -7,12 +7,12 @@
     </div>
     <div class="move">
       <div class="fly-left">
-        <img class="person" src="../../assets/img/effect/animations/effect_men.png">
-        <img class="bird" src="../../assets/img/effect/animations/effect_fly1.png">
+        <img class="person" src="../../assets/img/effect/animations/effect_fei1.png">
+        <!-- <img class="bird" src="../../assets/img/effect/animations/effect_fly1.png"> -->
       </div>
       <div class="fly-right">
-        <img class="person" src="../../assets/img/effect/animations/effect_women.png">
-        <img class="bird" src="../../assets/img/effect/animations/effect_fly2.png">
+        <img class="person" src="../../assets/img/effect/animations/effect_fei2.png">
+        <!-- <img class="bird" src="../../assets/img/effect/animations/effect_fly2.png"> -->
       </div>
     </div>
     <div class="people">
@@ -111,7 +111,7 @@ $all-count: 1;
       z-index: inherit;
       opacity: 0;
       animation-name: show_people;
-      animation-duration: 1s;
+      animation-duration: 0.5s;
       animation-timing-function: ease;
       animation-iteration-count: 1;
       animation-delay: $move-time;
@@ -161,7 +161,7 @@ $all-count: 1;
     transform: translate(0.1rem, -1.2rem);
   }
   100% {
-    transform: translate(0.1rem, -0.6rem);
+    transform: translate(0.1rem, -1.2rem);
     opacity: 0;
   }
 }
@@ -180,7 +180,7 @@ $all-count: 1;
     transform: translate(-0.1rem, -1.2rem);
   }
   100% {
-    transform: translate(-0.1rem, -0.6rem);
+    transform: translate(-0.1rem, -1.2rem);
     opacity: 0;
   }
 }

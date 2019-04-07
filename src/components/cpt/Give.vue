@@ -94,7 +94,7 @@ export default {
 <style lang="scss">
 .give-container {
   position: fixed;
-  z-index: 6;
+  z-index: 99999;
   left: 5%;
   right: 5%;
   bottom: 5%;

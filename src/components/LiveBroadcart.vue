@@ -4,9 +4,16 @@
       <video
         id="live-video"
         class="video-js vjs-default-skin live-video"
-        controls
+        controls="controls"
         preload="none"
         poster
+        x5-playsinline="true"
+        playsinline="true"
+        webkit-playsinline="true"
+        x-webkit-airplay="true"
+        x5-video-player-type="h5"
+        x5-video-player-fullscreen="false"
+        x5-video-orientation="portraint"
       >
         <source
           src="http://video.changlive.com/d1/584720824163/vod_video/1544769107686/MX6S1W.m3u8"
