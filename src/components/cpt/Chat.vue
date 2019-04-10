@@ -182,7 +182,7 @@ export default {
       height: 0.213rem;
       top: 50%;
       right: 27%;
-      transform: translateY(-50%);
+      transform: translateY(-40%);
     }
     .cf-exp,
     .cf-camera,

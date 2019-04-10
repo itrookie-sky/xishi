@@ -97,8 +97,8 @@ export default {
   z-index: 99999;
   left: 5%;
   right: 5%;
-  bottom: 5%;
-  height: 4.5rem;
+  bottom: .1rem;
+  height: 4rem;
   background-color: $xs-color-theme1;
   border: $xs-border-0;
   border-radius: $border-radius-all;
@@ -117,7 +117,7 @@ export default {
   }
   .give-gift {
     width: 92%;
-    height: 2.4rem;
+    height: 2rem;
     margin: 0.2rem auto 0.24rem;
     .gg-outter {
       width: 100%;

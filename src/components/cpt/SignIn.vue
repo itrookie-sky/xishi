@@ -116,7 +116,7 @@ export default {
         arrive: "1"
       },
       labelPosition: "left",
-      complete: false
+      complete: true
     };
   },
   methods: {
@@ -133,11 +133,11 @@ export default {
 .signin-container {
   position: fixed;
   width: 94%;
-  height: 4.5rem;
-  bottom: 10%;
+  height: 4rem;
+  bottom: .1rem;
   left: 50%;
   transform: translateX(-50%);
-  z-index: 6;
+  z-index: 99999;
   background-color: $xs-color-theme1;
   border-radius: $border-radius-all;
   color: #fff;
@@ -241,14 +241,14 @@ export default {
   .sign-submit-btn,
   .sign-submit-btn1 {
     color: #999;
-    margin: 0.25rem auto 0;
+    margin: 0.1rem auto 0;
     padding: 0.04rem 0;
     background-color: #fff;
     border-radius: 0.04rem;
     width: 1.2rem;
   }
   .sign-submit-btn1 {
-    margin: 1rem auto 0;
+    margin: .6rem auto 0;
   }
 }
 </style>

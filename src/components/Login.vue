@@ -14,7 +14,7 @@
         >
       </div>
       <div class="line"></div>
-      <div class="login-btn" v-on:click="onLogin">
+      <div class="login-btn" v-on:click="onLogin($event)">
         <span class="iconfont icon-bofang pos-center"></span>
         <span class="pos-center">登录</span>
       </div>
@@ -22,7 +22,7 @@
     <div class="lab-container" v-show="logined">
       <guide-lab-list
         class="guide-container"
-        v-for="guide in guideList"
+        v-for="guide in guideParsed"
         v-bind:key="guide.id"
         v-bind:guide-data="guide"
       ></guide-lab-list>
@@ -34,29 +34,79 @@ import utils from "../js/utils.js";
 import guide from "@/components/GuideSelect";
 import g from "../js/global.js";
 import conf from "../js/config.js";
+import { localKey } from "../js/const.js";
 export default {
   components: {
     "guide-lab-list": guide
   },
   data: function() {
     return {
-      password: "",
-      logined: false,
+      password: "123456",
+      logined: true,
       guideList: g.testGuideList
     };
+  },
+  computed: {
+    guideParsed: {
+      get: function() {
+        return this.guideList;
+      },
+      set: function(va) {
+        let data = [
+          {
+            id: "1",
+            type: "man",
+            desc: "新郎",
+            title: require("../assets/img/guide/guide_07.png"),
+            labList: []
+          },
+          {
+            id: "2",
+            type: "woman",
+            desc: "新娘",
+            title: require("../assets/img/guide/guide_09.png"),
+            labList: []
+          }
+        ];
+
+        for (let i = 0; i < va.length; i++) {
+          var label = va[i];
+          switch (label.type) {
+            case "man":
+              data[0].labList.push(label);
+              break;
+            case "woman":
+              data[1].labList.push(label);
+              break;
+          }
+        }
+
+        this.guideList = data;
+      }
+    }
   },
   methods: {
     onLogin: function(ev) {
       utils.log(this.password);
+      var self = this;
       if (this.password == "") return;
+
       this.$post(conf.getUrl(conf.login), {
         openId: g.openId,
         liveId: g.liveId,
-        password: this.password
+        passWord: this.password
       })
         .then(function(resp) {
           if (resp.status == 200) {
-            this.logined = true;
+            self.$message({
+              message: resp.data.message,
+              type: resp.data.success ? "success" : "warning"
+            });
+            self.logined = resp.data.success;
+            if (resp.data.success) {
+              self.global.live = resp.data.data.live;
+              self.guideParsed = resp.data.data.labels;
+            }
           } else {
             utils.log("请求失败", resp.status);
           }
@@ -65,6 +115,10 @@ export default {
           utils.log(err);
         });
     }
+  },
+  mounted() {
+    var self = this;
+    self.password = utils.storage.getData(localKey.pw) || "";
   }
 };
 </script>

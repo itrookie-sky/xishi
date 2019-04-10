@@ -1,4 +1,5 @@
 import Axios from "axios";
+import utils from "../utils.js";
 
 var axios = Axios.create();
 axios.defaults.timeout = 5000;
@@ -34,8 +35,8 @@ axios.interceptors.response.use(
 export function fetch(url, params = {}) {
     return new Promise((resolve, reject) => {
         axiox.get(url, {
-                params: params
-            })
+            params: params
+        })
             .then(response => {
                 resolve(response.data);
             })
@@ -52,8 +53,10 @@ export function fetch(url, params = {}) {
  */
 export function post(url, data = {}) {
     return new Promise((resolve, reject) => {
+        utils.log(`request>>>${url}`, data);
         axios.post(url, data)
             .then(response => {
+                utils.log(`response<<<${url}`, response)
                 resolve(response);
             }, err => {
                 reject(err);

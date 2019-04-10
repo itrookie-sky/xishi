@@ -190,7 +190,7 @@ export default {
     z-index: 6;
     width: 94%;
     min-height: 4rem;
-    top: 20%;
+    bottom: .1rem;
     left: 50%;
     transform: translateX(-50%);
     background-color: #fff;

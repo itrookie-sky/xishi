@@ -34,7 +34,7 @@ export default {
 };
 </script>
 
-<style>
+<style lang="scss">
 @import url("./assets/scss/var.scss");
 #app {
   font-family: "Avenir", Helvetica, Arial, sans-serif;

@@ -7,7 +7,7 @@
     <div class="lab-list border-0">
       <div class="lab-item" :class="{'bg-white':select}">上一次选择</div>
       <div class="lab-container" :class="{'con-select':select}">
-        <label v-show="select">{{guideData.desc+"更多标签"}}</label>
+        <label v-show="select" @click="onMoreClick">{{guideData.desc+"更多标签"}}</label>
         <div class="iconfont icon-shangjiantou" v-show="select"></div>
         <div class="scroll" :class="{'more-select':select,'more-unselect':!select}">
           <ul>
@@ -15,8 +15,9 @@
               class="lab-item bg-white"
               v-for="(lab,index) in parseLabList"
               :key="index"
-              @click="onLabClick"
-            >{{ lab }}</li>
+              :data-idx="index"
+              @click="onLabClick($event)"
+            >{{ lab.title }}</li>
           </ul>
         </div>
         <div class="iconfont icon-xiajiantou1" v-show="select"></div>
@@ -27,16 +28,16 @@
 </template>
 <script>
 import utils from "../js/utils.js";
+import conf from "../js/config.js";
+import { constants } from "fs";
 export default {
   name: "guide-lab-list",
   props: {
     /**
         [{
-          id:string
           title:string, logo图片路径
           desc:string,
           labList:[],
-      
         }]
       */
     "guide-data": {
@@ -53,8 +54,26 @@ export default {
     onMoreClick: function(ev) {
       this.select = !this.select;
     },
+    getLabel(idx) {
+      return this.guideData.labList[idx];
+    },
     onLabClick: function(ev) {
-      this.select = !this.select;
+      let self = this;
+      let lab = this.getLabel(ev.target.getAttribute("data-idx"));
+      this.$post(conf.getUrl(conf.setLabel), {
+        openId: this.global.openId,
+        liveId: this.global.liveId,
+        labelId: lab.id
+      })
+        .then(function(resp) {
+          if (resp.status == 200) {
+          } else {
+            utils.log("请求失败", resp.status);
+          }
+        })
+        .catch(function(err) {
+          self.global.utils.log(err);
+        });
     }
   },
   computed: {

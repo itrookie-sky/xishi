@@ -23,7 +23,6 @@ import 'videojs-contrib-hls'
 import '../static/css/iconfont/iconfont.css'
 import { post, fetch, patch, put } from './js/http/http.js'
 import global from './js/global'
-import chat from './js/chat/chat.js'
 
 /**微信授权 */
 global.init();

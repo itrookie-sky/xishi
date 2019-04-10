@@ -1,6 +1,10 @@
 <template>
   <div class="live-container">
     <section class="live-top">
+      <!--  
+        x5-video-player-type="h5"
+        x5-video-player-fullscreen="true"
+      -->
       <video
         id="live-video"
         class="video-js vjs-default-skin live-video"
@@ -11,8 +15,6 @@
         playsinline="true"
         webkit-playsinline="true"
         x-webkit-airplay="true"
-        x5-video-player-type="h5"
-        x5-video-player-fullscreen="false"
         x5-video-orientation="portraint"
       >
         <source
