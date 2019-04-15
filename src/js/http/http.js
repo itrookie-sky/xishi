@@ -53,10 +53,10 @@ export function fetch(url, params = {}) {
  */
 export function post(url, data = {}) {
     return new Promise((resolve, reject) => {
-        utils.log(`request>>>${url}`, data);
+        utils.log(`request<<<${url}`, data);
         axios.post(url, data)
             .then(response => {
-                utils.log(`response<<<${url}`, response)
+                utils.log(`response>>>${url}`, response)
                 resolve(response);
             }, err => {
                 reject(err);

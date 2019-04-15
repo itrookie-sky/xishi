@@ -1,28 +1,17 @@
 <template>
   <div>
-    <div class="demo-container">
+    <!-- <div class="demo-container">
       <ul class="demo-list">
         <li>
           <component :is="curAn"></component>
         </li>
-        <!-- <li>
-          <an6></an6>
-        </li>
-        <li>
-          <an7></an7>
-        </li>
-        <li>
-          <an1></an1>
-        </li>
-        <li>
-          <an2></an2>
-        </li>-->
       </ul>
-    </div>
-    <el-button type="success" @click="onChange($event)">点击切换特效</el-button>
+    </div>-->
+    <!-- <el-button type="success" @click="onChange($event)">点击切换特效</el-button> -->
     <el-button type="success" @click="onIMopen($event)">聊天登录</el-button>
     <el-button type="success" @click="onIMmsg($event)">聊天发消息</el-button>
     <el-button type="success" @click="onIMJoin($event)">加入聊天室</el-button>
+    <el-button type="success" @click="onIMQuit($event)">退出聊天室</el-button>
     <el-button type="success" @click="onIMrg($event)">聊天注册</el-button>
     <el-button type="success" @click="onAlert($event)">点击弹窗</el-button>
     <el-button type="success" @click="onMsg($event)">点击消息</el-button>
@@ -33,12 +22,10 @@ import an1 from "./animations/animations1.vue";
 import an2 from "./animations/animations2.vue";
 import an6 from "./animations/animations6.vue";
 import an7 from "./animations/animations7.vue";
-import { conn } from "../js/chat/chat.js";
+import IM from "../js/chat/chat.js";
 import g from "../js/global.js";
 import WebIM from "easemob-websdk";
 import Utils from "../js/utils";
-import { constants } from "fs";
-import { error } from "util";
 export default {
   components: {
     an1: an1,
@@ -62,7 +49,7 @@ export default {
         username: g.openId,
         password: g.IMpassword,
         nickname: "测试名字",
-        appKey: conn.config.appkey,
+        appKey: IM.conn.config.appkey,
         success: function() {
           // self.onIMopen();
           self.$message({
@@ -76,59 +63,61 @@ export default {
             type: "error"
           });
         },
-        apiUrl: conn.config.apiURL
+        apiUrl: IM.conn.config.apiURL
       };
-      conn.registerUser(options);
+      IM.conn.registerUser(options);
     },
     onIMopen() {
       var self = this;
-      console.log("监听IM事件", conn);
+      console.log("监听IM事件", IM.conn);
 
-      conn.listen({
+      IM.conn.listen({
         onOpened: function(msg) {
           console.log("%c [opened] 连接已成功建立", "color: green");
         },
         onClosed: function(msg) {
-          self.$message({
-            message: msg,
-            type: "warning"
-          });
+          console.log("%c [closed] 连接已关闭", "color: red");
         },
         onTextMessage: function(msg) {
           console.log("收到文本消息:", msg);
         },
         onOnline: function(msg) {
-          self.$message({
-            message: msg,
-            type: "success"
-          });
+          console.log("%c [online] 用户已经上线", "color: green");
         },
         onOffline: function(msg) {
           console.log("%c [offline] user offline", "color:red");
         },
         onError: function(msg) {
           console.warn("错误处理: ", msg);
+        },
+        onPresence: function(msg) {
+          console.log("%c [chatroom] state type", "color:red", msg);
         }
       });
 
       var option = {
-        apiUrl: conn.config.apiURL,
+        apiUrl: IM.conn.config.apiURL,
         user: g.openId,
         pwd: g.IMpassword,
-        appKey: conn.config.appkey
+        appKey: IM.conn.config.appkey
       };
       console.log("发送IM登录信息:", option);
-      conn.open(option);
+      IM.conn.open(option);
     },
     onIMJoin(e) {
       // 加入聊天室
-      conn.joinChatRoom({
+      IM.conn.joinChatRoom({
+        roomId: "78895638446081"
+      });
+    },
+    onIMQuit(e) {
+      IM.conn.quitChatRoom({
         roomId: "78895638446081"
       });
     },
     onIMmsg(e) {
       var self = this;
-      var id = conn.getUniqueId();
+      var id = IM.conn.getUniqueId();
       var msg = new WebIM.message("txt", id);
       var option = {
         msg: "测试文本", // 消息内容
@@ -136,18 +125,14 @@ export default {
         roomType: true, // 群聊类型，true时为聊天室，false时为群组
         success: function(msg) {
           console.log("消息发送成功:", msg);
-          self.$message({
-            message: "消息发送成功:" + msg,
-            type: "success"
-          });
         }, // 对成功的相关定义，sdk会将消息id登记到日志进行备份处理
         fail: function(msg) {
-          console.error(msg);
+          console.log(msg);
         } // 对失败的相关定义，sdk会将消息id登记到日志进行备份处理
       };
       msg.set(option);
       msg.setGroup("groupchat"); // 群聊类型
-      conn.send(msg.body);
+      IM.conn.send(msg.body);
       console.log("发送消息:", msg.body);
     },
     onChange() {

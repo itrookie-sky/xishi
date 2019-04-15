@@ -3,23 +3,64 @@ import utils from './utils'
 import config from './config'
 import { localKey } from './const.js'
 import { post } from './http/http.js'
-import { IMinit } from './chat/chat.js'
+import IM from './chat/chat.js'
+import weixin from './weixin';
 
 const Global = {
     openId: "",
     code: "",
     utils: utils,
     config: config,
-    userInfo: null,
+    userInfo: {},
+    userLabel: "1",
     liveId: "1000",
     IMpassword: "xishi123456",
-    /**直播界面数据初始化 */
-    live: null,
+    hongbaoId: 1000,//发送红包生成ID
+    live: {
+        "id": 1000,
+        "name": "吴奇隆与刘诗诗结婚现场",
+        "company_id": 1000,
+        "man": "吴奇隆",
+        "man_tel": "13800138000",
+        "man_count": 0,
+        "woman": "刘诗诗",
+        "woman_tel": "1380013801",
+        "woman_count": 0,
+        "planner": "子龙",
+        "planner_tel": "10086",
+        "start_time": 1548257460,
+        "end_time": 1556670600,
+        "wedding_day": 1554078600,
+        "provice": "北京市",
+        "city": "北京市",
+        "area": "海淀区",
+        "address": "西苑东路",
+        "video": "",
+        "package_id": 1000,
+        "status": "1",
+        "order_sta": "nopay",
+        "chat": "78895638446081",
+        "remark": "",
+        "password": "e10adc3949ba59abbe56e057f20f883e",
+        "is_sign": "0",
+        "is_duikang": "0",
+        "is_chat": "0",
+        "is_img": "0",
+        "is_dashang": "0",
+        "is_hongbao": "0",
+        "is_zan": "0",
+        "is_pageflag": "0",
+        "visit_num": 0,
+        "visit_rand": 0,
+        "createtime": 1548257460,
+        "is_del": "0"
+    }, //直播界面数据初始化
+    chatRoomId: "78895638446081",
 
     init() {
         this.liveId = utils.getUrlParams("liveid");
         this.login();
-        IMinit();
+        IM.init();
     },
 
     login() {
@@ -35,7 +76,7 @@ const Global = {
         let self = this;
         let code = utils.getUrlParams("code");
         if (code === "test") {
-            this.openId = "obeXIt3aK3UJKf1G-i5LYMrB3TZI";
+            this.openId = "obeXIt3aK3UJKf1G-i5LYMrB3TZA";
             this.liveId = "1000";
             config.isDebug = true;
         }

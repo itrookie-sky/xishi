@@ -8,8 +8,7 @@
     <div class="cm-hongbao iconfont icon-ai-hongbao" @click="onHongBaoTap($event)"></div>
     <section class="chat-outter">
       <div class="chat-inner">
-        <chat-item></chat-item>
-        <chat-item></chat-item>
+        <chat-item v-for="(item,index) in chatList" :key="index" :msg="item"></chat-item>
       </div>
     </section>
     <!-- 聊天输入 -->
@@ -43,7 +42,13 @@ import Hongbao from "./Hongbao.vue";
 import ChatHongbao from "./ChatHongbao.vue";
 import Give from "./Give.vue";
 import ChatItem from "./ChatItem.vue";
+import IM from "../../js/chat/chat.js";
+import g from "../../js/global.js";
+import { msgType } from "../../js/const.js";
 export default {
+  props: {
+    chatLink: String
+  },
   components: {
     rank: Rank,
     "sign-in": SignIn,
@@ -59,7 +64,8 @@ export default {
       showSignIn: false,
       showHongBao: false,
       showChatHongbao: false,
-      showGive: false
+      showGive: false,
+      chatList: []
     };
   },
   methods: {
@@ -82,11 +88,16 @@ export default {
     },
     /**聊天相关 */
     onSentTap(ev) {
-      utils.log("聊天信息");
+      let _this = this;
+      let msg = IM.getBaseMsg(msgType.text, this.chatInput);
+      IM.sendMsg(msg);
     },
     onBiaoqingTap(ev) {},
     onCameraTap(ev) {},
     onImgTap(ev) {},
+    onMessage(msg) {
+      utils.log(msg);
+    },
     /**界面管理 */
     mgrShow(params) {
       switch (params) {
@@ -107,6 +118,36 @@ export default {
           break;
       }
     }
+  },
+  mounted: function() {
+    var _this = this;
+    console.log(IM.conn);
+    this.$nextTick(function() {
+      IM.conn.listen({
+        onOpened: function(msg) {
+          utils.log("%c [opened] 连接已成功建立", "color: green");
+        },
+        onClosed: function(msg) {
+          utils.log("%c [closed] 连接已关闭", "color: red");
+        },
+        onTextMessage: function(msg) {
+          utils.log("%c [msg] 收到文本消息 ", "color:blue", msg);
+          _this.onMessage(msg);
+        },
+        onOnline: function(msg) {
+          utils.log("%c [online] 用户已经成功连接", "color: green");
+        },
+        onOffline: function(msg) {
+          utils.log("%c [offline] 用户已经离线", "color:red");
+        },
+        onError: function(msg) {
+          utils.warn("%c [error] 错误处理: ", "color: red", msg);
+        },
+        onPresence: function(msg) {
+          console.log("%c [chatroom] state type", "color:red", msg);
+        }
+      });
+    });
   }
 };
 </script>

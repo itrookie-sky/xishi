@@ -8,10 +8,10 @@
       <span>越丰厚!</span>
     </p>
     <p class="sign-desc" v-show="!complete">
-      <span>{{info.person[0]}}</span>
+      <span>{{person[0]}}</span>
       <span>和</span>
-      <span>{{info.person[1]}}</span>
-      <span>{{info.time}}</span>
+      <span>{{person[1]}}</span>
+      <span>{{startTime}}</span>
       <span>开始</span>
     </p>
 
@@ -30,11 +30,11 @@
     </div>
     <p class="sign-desc-com" v-show="complete">
       <span>您已经签到成功,</span>
-      <span>请于{{info.time}}</span>
-      <span>到达{{info.address}}参加</span>
-      <span>{{info.person[0]}}</span>
+      <span>请于{{startTime}}</span>
+      <span>到达{{address}}参加</span>
+      <span>{{person[0]}}</span>
       <span>和</span>
-      <span>{{info.person[1]}}</span>
+      <span>{{person[1]}}</span>
       <span>的婚礼</span>
     </p>
     <div class="sign-form" v-show="!complete">
@@ -63,7 +63,7 @@
               <el-input v-model="formAlign.region"></el-input>
             </el-col>
             <el-col :span="9">
-              <label class="sf-code-lab">短信验证码</label>
+              <label class="sf-code-lab" @click="getfCode">获取验证码</label>
             </el-col>
           </el-row>
         </el-form-item>
@@ -74,13 +74,13 @@
           <el-radio-group v-model="formAlign.arrive">
             <el-row type="flex" justify="space-between">
               <el-col :span="8">
-                <el-radio label="参加婚礼" value="1"></el-radio>
+                <el-radio label="0" value="0">参加婚礼</el-radio>
               </el-col>
               <el-col :span="8">
-                <el-radio label="无法到场" value="2"></el-radio>
+                <el-radio label="1" value="1">无法到场</el-radio>
               </el-col>
               <el-col :span="8">
-                <el-radio label="待定" value="3"></el-radio>
+                <el-radio label="2" value="2">待定</el-radio>
               </el-col>
             </el-row>
           </el-radio-group>
@@ -97,14 +97,15 @@
 </template>
 <script>
 import utils from "../../js/utils";
+import config from "../../js/config.js";
+import g from "../../js/global.js";
 export default {
   data() {
     return {
-      info: {
-        person: ["新新郎", "新新娘"],
-        time: "2017-11-11 10:00",
-        address: ""
-      },
+      person: [],
+      start: 0,
+      end: 0,
+      address: "",
       progressTabs: ["100", "200", "300", "400"],
       progressCur: 60,
       /**表单 */
@@ -112,20 +113,104 @@ export default {
         name: "",
         tel: "",
         code: "",
-        sex: "",
+        sex: "man",
         arrive: "1"
       },
       labelPosition: "left",
-      complete: true
+      complete: false
     };
+  },
+  computed: {
+    startTime() {
+      return utils.time.getYMDHMSByTimestamp(this.start);
+    },
+    endTime() {
+      return utils.time.getYMDHMSByTimestamp(this.end);
+    }
   },
   methods: {
     onSubmit(ev) {
-      utils.log(this.formAlign);
+      var _this = this;
+      console.log(_this.formAlign);
+      _this
+        .$post(config.getUrl(config.regin), {
+          openId: g.openId,
+          liveId: g.liveId,
+          name: _this.formAlign.name,
+          sex: g.userInfo.sex,
+          phone: _this.formAlign.tel,
+          vCode: _this.formAlign.code,
+          isJoin: +_this.formAlign.arrive
+        })
+        .then(function(resp) {
+          if (resp.status == 200) {
+            _this.complete = resp.data.success;
+          } else {
+          }
+        })
+        .catch(function(err) {
+          utils.warn("签到提交失败", err);
+        });
     },
     onClose(ev) {
       this.$emit("close", "signin");
+    },
+    getfCode(ev) {
+      var _this = this;
+      _this
+        .$post(config.getUrl(config.formCode), {
+          openId: g.openId,
+          liveId: g.liveId
+        })
+        .then(function(resp) {
+          if (resp.status == 200) {
+            var data = resp.data.data;
+            if (resp.data.success) {
+              _this
+                .$post(config.getUrl(config.sendVCode), {
+                  openId: g.openId,
+                  phone: _this.tel,
+                  fCode: resp.data.data.fCode
+                })
+                .then(function(_resp) {
+                  if (_resp.data.success) {
+                    _this.$message({
+                      message: `验证码已经发送`,
+                      type: "success"
+                    });
+                  } else {
+                    utils.log("%c[vcode] 短信验证码", "color:red", _resp);
+                  }
+                })
+                .catch(function(err) {
+                  utils.warn("发送短信验证码失败", err);
+                });
+            } else {
+              utils.log("%c[vcode] 校验码获取失败", "color:red", resp);
+            }
+          } else {
+            _this.$message({
+              message: `错误码:${resp.status}`,
+              type: "warning"
+            });
+          }
+        });
+    },
+    signInInit() {
+      let l = g.live;
+      let person = [];
+      person[0] = l.man;
+      person[1] = l.woman;
+      this.person = person;
+      this.start = l.start_time;
+      this.end = l.end_time;
+
+      this.address = `${l.city} ${l.area} ${l.address}`;
     }
+  },
+  mounted() {
+    var _this = this;
+    this.signInInit();
   }
 };
 </script>
@@ -134,10 +219,10 @@ export default {
   position: fixed;
   width: 94%;
   height: 4rem;
-  bottom: .1rem;
+  bottom: 0.1rem;
   left: 50%;
   transform: translateX(-50%);
-  z-index: 99999;
+  z-index: 6;
   background-color: $xs-color-theme1;
   border-radius: $border-radius-all;
   color: #fff;
@@ -248,7 +333,7 @@ export default {
     width: 1.2rem;
   }
   .sign-submit-btn1 {
-    margin: .6rem auto 0;
+    margin: 0.6rem auto 0;
   }
 }
 </style>

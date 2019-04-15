@@ -29,6 +29,7 @@
 <script>
 import utils from "../js/utils.js";
 import conf from "../js/config.js";
+import { router } from "../js/const.js";
 import { constants } from "fs";
 export default {
   name: "guide-lab-list",
@@ -67,6 +68,7 @@ export default {
       })
         .then(function(resp) {
           if (resp.status == 200) {
+            self.loginedHandler();
           } else {
             utils.log("请求失败", resp.status);
           }
@@ -74,6 +76,10 @@ export default {
         .catch(function(err) {
           self.global.utils.log(err);
         });
+    },
+    loginedHandler() {
+      let g = this.global;
+      this.$router.push(router.live);
     }
   },
   computed: {

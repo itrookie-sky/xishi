@@ -18,7 +18,7 @@
         x5-video-orientation="portraint"
       >
         <source
-          src="http://video.changlive.com/d1/584720824163/vod_video/1544769107686/MX6S1W.m3u8"
+          src="http://video.changlive.com/d1/584720826491/vod_video/1546355590080/MRMKBJ.m3u8"
           type="application/x-mpegURL"
         >
       </video>
@@ -71,9 +71,12 @@
 </template>
 <script>
 import videojs from "video.js";
-import Utils from "../js/utils";
+import utils from "../js/utils";
+import config from "../js/config.js";
 import Chat from "./cpt/Chat.vue";
 import Happy from "./cpt/HappyList.vue";
+import g from "../js/global.js";
+import IM from "../js/chat/chat.js";
 export default {
   components: {
     Chat,
@@ -110,29 +113,69 @@ export default {
       this.anSelectIdx = +ev.target.getAttribute("data-an-key");
     }
   },
-  meounted: function() {
-    videojs(
+  mounted: function() {
+    var _this = this;
+
+    this.$nextTick(function() {
+      _this
+        .$post(config.getUrl(config.live), {
+          openId: g.openId,
+          liveId: g.liveId
+        })
+        .then(function(resp) {
+          if (resp.status == 200) {
+            var data = resp.data.data;
+            if (resp.data.success) {
+              _this.people = data.visit_num + "";
+              _this.progress = data.exponent.man.percent;
+              g.chatRoomId = data.chat;
+              IM.open();
+            } else {
+            }
+          } else {
+            _this.$message({
+              message: `错误码:${resp.status}`,
+              type: "warning"
+            });
+          }
+        });
+    });
+
+    /*  videojs(
       "live-video",
       {
         bigPlayButton: false,
         textTrackDisplay: false,
         posterImage: true,
         errorDisplay: false,
-        controlBar: true
+        controlBar: true,
+        loop: true,
+        sources: [
+          {
+            src:
+              "http://video.changlive.com/d1/584720826491/vod_video/1546355590080/MRMKBJ.m3u8",
+            type: "application/x-mpegURL"
+          }
+        ]
       },
       function() {
         this.play();
+        utils.log("自动播放视频");
       }
-    );
+    ); */
   }
 };
 </script>
 <style scoped lang="scss">
 .live-container {
+  position: absolute;
   flex-direction: column;
   flex-wrap: wrap;
-  width: 100%;
-  height: 100vh;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
   font-size: 0.2rem;
   overflow: hidden;
 }
@@ -145,8 +188,13 @@ export default {
   height: 100%;
 }
 .active-container {
-  width: 97.3%;
-  height: 66.3%;
+  position: absolute;
+  /* width: 97.3%;
+  height: 66.3%; */
+  top:33.3%;
+  bottom: 0;
+  left: 0;
+  right:0;
   padding: 0 0.04rem 0.04rem 0.04rem;
   border: rgba(0, 0, 0, 0) solid 0.01rem;
   background: -webkit-radial-gradient(50% 20%, circle cover, #e5086c, #e60119);

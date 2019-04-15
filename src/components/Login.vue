@@ -34,7 +34,7 @@ import utils from "../js/utils.js";
 import guide from "@/components/GuideSelect";
 import g from "../js/global.js";
 import conf from "../js/config.js";
-import { localKey } from "../js/const.js";
+import { localKey, router } from "../js/const.js";
 export default {
   components: {
     "guide-lab-list": guide
@@ -42,7 +42,7 @@ export default {
   data: function() {
     return {
       password: "123456",
-      logined: true,
+      logined: false,
       guideList: g.testGuideList
     };
   },
@@ -88,7 +88,7 @@ export default {
   methods: {
     onLogin: function(ev) {
       utils.log(this.password);
-      var self = this;
+      var _this = this;
       if (this.password == "") return;
 
       this.$post(conf.getUrl(conf.login), {
@@ -98,14 +98,16 @@ export default {
       })
         .then(function(resp) {
           if (resp.status == 200) {
-            self.$message({
+            _this.$message({
               message: resp.data.message,
               type: resp.data.success ? "success" : "warning"
             });
-            self.logined = resp.data.success;
+            _this.logined = resp.data.success;
             if (resp.data.success) {
-              self.global.live = resp.data.data.live;
-              self.guideParsed = resp.data.data.labels;
+              _this.global.live = resp.data.data.live;
+              _this.global.chatRoomId = resp.data.data.live.chat;
+              _this.guideParsed = resp.data.data.labels;
+              utils.storage.setData(localKey.pw, _this.password);
             }
           } else {
             utils.log("请求失败", resp.status);
@@ -117,8 +119,9 @@ export default {
     }
   },
   mounted() {
-    var self = this;
-    self.password = utils.storage.getData(localKey.pw) || "";
+    var _this = this;
+    _this.password = utils.storage.getData(localKey.pw) || "";
+    this.logined = false;
   }
 };
 </script>

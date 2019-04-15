@@ -1,8 +1,12 @@
 import imConf from './webim.config.js';
-// var _ = require('../lib/strophe-1.2.8.js');
-import WebIM from 'easemob-websdk'
+import WebIM from 'easemob-websdk';
+import g from "../global.js";
+import config from "../config.js";
+import utils from "../utils.js";
+import { post } from "../http/http.js";
 
-export var conn = null;
+
+
 
 /**
  * The connection class.
@@ -21,24 +25,107 @@ export var conn = null;
  * @param {Boolean} options.delivery - 是否发送delivered ack
  * 初始化
  */
-export function IMinit() {
-    conn = new WebIM.connection({
+function init() {
+    mod.conn = new WebIM.connection({
         isHttpDNS: imConf.isHttpDNS,
         isMultiLoginSessions: imConf.isMultiLoginSessions,
-        https: typeof imConf.https === 'boolean' ? imConf.https : location.protocol ===
-            'https:',
+        https: typeof imConf.https === 'boolean' ? imConf.https : location.protocol === 'https:',
         url: imConf.xmppURL,
-        isAutoLogin: true,
+        isAutoLogin: imConf.isAutoLogin,
         heartBeatWait: imConf.heartBeatWait,
         autoReconnectNumMax: imConf.autoReconnectNumMax,
         autoReconnectInterval: imConf.autoReconnectInterval,
         isStropheLog: imConf.isStropheLog,
         delivery: imConf.delivery
     });
-    conn.config = imConf;
+    mod.conn.config = imConf;
+}
+
+/**
+ * 聊天接口登录
+ */
+function open() {
+    var option = {
+        apiUrl: imConf.apiURL,
+        user: g.openId,
+        pwd: g.IMpassword,
+        appKey: imConf.appkey
+    }
+    mod.conn.open(option);
+}
+
+/**
+ * 加入聊天室
+ */
+function join() {
+    mod.conn.joinChatRoom({
+        roomId: g.charRoomId
+    });
 }
 
 
+/**
+ * 发送消息
+ */
+function sendMsg(data) {
+    var id = mod.conn.getUniqueId();
+    var msg = new WebIM.message("txt", id);
+    var send = JSON.stringify(data);
+    var option = {
+        msg: send, // 消息内容
+        to: g.chatRoomId, // 接收消息对象(群组id)
+        roomType: true, // 群聊类型，true时为聊天室，false时为群组
+        success: function (msg) {
+            var obj = {
+                openId: g.openId,
+                liveId: g.liveId,
+                type: data.type,
+                content: data.content
+            };
+            if (data.to_type) obj.toUser = data.to_type;
 
+            post(config.getUrl(config.sendMsg), obj)
+                .then(function (resp) {
+                    utils.log("%c[sendmsg] 聊天记录留存", "color:green", resp);
+                }).catch(function (err) {
+                    utils.warn(err);
+                });
+            utils.log("%c [success] send msg ", "color:green", msg);
+        }, // 对成功的相关定义，sdk会将消息id登记到日志进行备份处理
+        fail: function (msg) {
+            utils.error(msg);
+        } // 对失败的相关定义，sdk会将消息id登记到日志进行备份处理
+    };
+    msg.set(option);
+    msg.setGroup("groupchat"); // 群聊类型
+    mod.conn.send(msg.body);
+    utils.log("%c[send msg] 发送消息:", "color:blue", msg.body);
+}
+
+/**
+ * 获取基本消息结构体
+ */
+function getBaseMsg(type, cnt) {
+    if (!type) type = "text"
+    let obj = {
+        "from_name": g.userInfo.nickname,
+        "from_headimg": g.userInfo.headimgurl,
+        "from_label": g.userLabel,
+        "type": type,
+        "content": cnt || ""
+    }
+    return obj;
+}
+
+var mod = {
+    sendMsg: sendMsg,
+    join: join,
+    init: init,
+    conn: {},
+    open: open,
+    getBaseMsg: getBaseMsg
+};
+
+export default mod;
 
 

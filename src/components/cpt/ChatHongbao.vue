@@ -64,7 +64,7 @@ export default {
 <style scoped lang="scss">
 .chat-hongbao {
   position: fixed;
-  z-index: 99999;
+  z-index: 6;
   left: 0;
   top: 0;
   right: 0;

@@ -7,7 +7,7 @@ const config = {
 
     https: false, // 是否使用https
 
-    isHttpDNS: true, //防止DNS劫持从服务端获取XMPPUrl、restUrl
+    isHttpDNS: false, //防止DNS劫持从服务端获取XMPPUrl、restUrl
 
     isMultiLoginSessions: false, // 是否开启多页面同步收消息，注意，需要先联系商务开通此功能
 
@@ -21,7 +21,7 @@ const config = {
 
     heartBeatWait: 4500, // 使用webrtc（视频聊天）时发送心跳包的时间间隔，单位ms
 
-    delivery: true, // 是否发送已读回执
+    delivery: false, // 是否发送已读回执
 }
 
 export default config;

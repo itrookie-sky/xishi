@@ -7,7 +7,7 @@
           <h3>{{ item }}</h3>
         </el-carousel-item>
       </el-carousel>
-    </div> -->
+    </div>-->
     <div class="hb-content">
       <el-row type="flex" class="row-bg" justify="center">
         <el-col :span="24">
@@ -28,16 +28,16 @@
       </el-row>
       <el-row type="flex" class="row-bg" justify="space-around">
         <el-col :span="5">
-          <el-radio v-model="radio" label="1">新人</el-radio>
+          <el-radio v-model="radio" label="0">新人</el-radio>
         </el-col>
         <el-col :span="5">
-          <el-radio v-model="radio" label="2">新郎亲友</el-radio>
+          <el-radio v-model="radio" label="1">新郎亲友</el-radio>
         </el-col>
         <el-col :span="5">
-          <el-radio v-model="radio" label="3">新娘亲友</el-radio>
+          <el-radio v-model="radio" label="2">新娘亲友</el-radio>
         </el-col>
         <el-col :span="5">
-          <el-radio v-model="radio" label="4">全部亲友</el-radio>
+          <el-radio v-model="radio" label="3">全部亲友</el-radio>
         </el-col>
       </el-row>
       <el-row type="flex" class="row-bg" justify="center">
@@ -53,19 +53,28 @@
 </template>
 <script>
 import utils from "../../js/utils";
+import IM from "../../js/chat/chat.js";
+import { msgType } from "../../js/const.js";
+import g from "../../js/global.js";
 export default {
   data() {
     return {
       money: "",
       count: "",
-      radio: "4",
+      radio: "0",
       desc: ""
     };
   },
   methods: {
     handleChange(ev) {},
-    onHongbaoSend(ev) {
-      utils.log(ev);
+    onHongbaoSend(ev) {},
+    sendHongBao() {
+      let obj = IM.getBaseMsg(msgType.money, this.desc);
+      obj.amount = this.money;
+      obj.num = this.count;
+      obj.to_type = +this.radio;
+      obj.id = g.hongbaoId;
+      obj.IM.sendMsg(obj);
     },
     onClose(ev) {
       this.$emit("close", "hongbao");
@@ -79,7 +88,7 @@ export default {
   position: fixed;
   bottom: 10%;
   left: 50%;
-  z-index: 99999;
+  z-index: 6;
   transform: translateX(-50%);
   background-color: $xs-color-theme1;
   border-radius: $border-radius-all;

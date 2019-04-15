@@ -74,6 +74,9 @@
   </div>
 </template>
 <script>
+import config from "../js/config.js";
+import g from "../js/global.js";
+import Utils from "../js/utils";
 export default {
   data() {
     return {
@@ -86,55 +89,8 @@ export default {
         "只有余额大于0时才可以提取余额",
         "提现时到账时间为1个工作日内"
       ],
+      log: [],
       record: [
-        {
-          name: "三个字",
-          timestamp: "2018-11-11 12:12",
-          money: "999.99",
-          state: 1
-        },
-        {
-          name: "三个字",
-          timestamp: "2018-11-11 12:12",
-          money: "999.99",
-          state: 1
-        },
-        {
-          name: "三个字",
-          timestamp: "2018-11-11 12:12",
-          money: "999.99",
-          state: 1
-        },
-        {
-          name: "三个字",
-          timestamp: "2018-11-11 12:12",
-          money: "999.99",
-          state: 1
-        },
-        {
-          name: "三个字",
-          timestamp: "2018-11-11 12:12",
-          money: "999.99",
-          state: 1
-        },
-        {
-          name: "三个字",
-          timestamp: "2018-11-11 12:12",
-          money: "999.99",
-          state: 1
-        },
-        {
-          name: "三个字",
-          timestamp: "2018-11-11 12:12",
-          money: "999.99",
-          state: 1
-        },
-        {
-          name: "三个字",
-          timestamp: "2018-11-11 12:12",
-          money: "999.99",
-          state: 1
-        },
         {
           name: "三个字",
           timestamp: "2018-11-11 12:12",
@@ -183,6 +139,21 @@ export default {
     onPass(ev) {
       this.state = 1;
     }
+  },
+  mounted() {
+    var _this = this;
+
+    _this
+      .$post(config.getUrl(config.amount), {
+        openId: g.openId,
+        liveId: g.liveId
+      })
+      .then(function(resp) {
+        if (resp.data.success) {
+          _this.money = resp.data.data.amount;
+          _this.log = resp.data.data.log;
+        }
+      });
   }
 };
 </script>
