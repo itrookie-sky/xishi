@@ -86,17 +86,21 @@ export default {
     onHongBaoTap(ev) {
       this.showHongBao = true;
     },
-    /**聊天相关 */
+    /**================聊天相关================= */
     onSentTap(ev) {
       let _this = this;
       let msg = IM.getBaseMsg(msgType.text, this.chatInput);
-      IM.sendMsg(msg);
+      IM.sendMsg(msg).then(function(data) {
+        _this.chatInput = "";
+        _this.chatList.push(data);
+      });
     },
     onBiaoqingTap(ev) {},
     onCameraTap(ev) {},
     onImgTap(ev) {},
     onMessage(msg) {
-      utils.log(msg);
+      let data = JSON.parse(msg.data);
+      this.chatList.push(data);
     },
     /**界面管理 */
     mgrShow(params) {
@@ -126,6 +130,7 @@ export default {
       IM.conn.listen({
         onOpened: function(msg) {
           utils.log("%c [opened] 连接已成功建立", "color: green");
+          IM.join();
         },
         onClosed: function(msg) {
           utils.log("%c [closed] 连接已关闭", "color: red");

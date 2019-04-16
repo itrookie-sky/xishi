@@ -19,6 +19,10 @@ import '../static/css/global.css' /*引入公共样式*/
 /**播放器 */
 import 'video.js/dist/video-js.css'
 import 'videojs-contrib-hls'
+import VideoPlayer from 'vue-video-player'
+Vue.use(VideoPlayer);
+require('video.js/dist/video-js.css') 
+require('vue-video-player/src/custom-theme.css')
 
 import '../static/css/iconfont/iconfont.css'
 import { post, fetch, patch, put } from './js/http/http.js'

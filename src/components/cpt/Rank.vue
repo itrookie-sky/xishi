@@ -106,6 +106,9 @@ export default {
       this.showSmall = true;
     },
     handleClick(tab, event) {}
+  },
+  mounted(){
+
   }
 };
 </script>

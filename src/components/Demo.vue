@@ -1,13 +1,13 @@
 <template>
   <div>
-    <!-- <div class="demo-container">
+    <div class="demo-container">
       <ul class="demo-list">
         <li>
           <component :is="curAn"></component>
         </li>
       </ul>
-    </div>-->
-    <!-- <el-button type="success" @click="onChange($event)">点击切换特效</el-button> -->
+    </div>
+    <el-button type="success" @click="onChange($event)">点击切换特效</el-button>
     <el-button type="success" @click="onIMopen($event)">聊天登录</el-button>
     <el-button type="success" @click="onIMmsg($event)">聊天发消息</el-button>
     <el-button type="success" @click="onIMJoin($event)">加入聊天室</el-button>

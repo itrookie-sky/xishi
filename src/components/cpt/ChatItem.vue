@@ -1,7 +1,7 @@
 <template>
   <div class="chat-item">
     <div class="head">
-      <img class="head-img" src="../../assets/img/effect/effect_05.png">
+      <img class="head-img" :src="headSrc">
       <p class="nick">{{nick}}</p>
     </div>
     <div class="ci-outter">
@@ -10,10 +10,11 @@
       <div class="chat-hongbao" v-show="state=='money'" @click="onHongbaoTap($event)">
         <img class="hb-bg" src="../../assets/img/hongbao/hongbao_11.png">
         <img class="hb-icon" src="../../assets/img/guide/guide_07.png">
-        <p class="hb-desc">{{hongbaoDesc}}</p>
+        <!-- <p class="hb-desc">{{hongbaoDesc}}</p> -->
+
       </div>
       <div class="chat-img" v-show="state=='img'||state=='emoji'||state=='gift'">
-        <img :src="imgSrc">
+        <img :src="testSrc">
       </div>
     </div>
   </div>
@@ -30,13 +31,23 @@ export default {
        */
       state: this.msg.type,
       headSrc: this.msg.from_headimg || "",
-      text: "测试文本",
+      text: this.msg.content,
       testSrc: require("../../assets/img/effect/effect_05.png"),
-      nick: "名字最多哈哈哈",
+      nick: this.msg.from_name,
       /**红包 */
       hongbaoId: this.msg.id,
       num: this.msg.num,
       amount: this.msg.amount
+      // state: "text",
+      // headSrc:
+      //   "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1555438199904&di=ccd586015c1041f9bb5d68d380e5c6d6&imgtype=0&src=http%3A%2F%2Ftx.haiqq.com%2Fuploads%2Fallimg%2F161009%2F035I55410-9.jpg",
+      // text: "啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊",
+      // testSrc: require("../../assets/img/effect/effect_05.png"),
+      // nick: "名字啊啊啊啊啊",
+      // /**红包 */
+      // hongbaoId: 1001,
+      // num: 1,
+      // amount: 1
     };
   },
   computed: {
@@ -51,7 +62,7 @@ export default {
           src = this.msg.img;
           break;
         default:
-          src = "";
+          src = this.testSrc;
           break;
       }
       return this.src;
@@ -134,6 +145,7 @@ export default {
     }
     .chat-text {
       min-width: 1.88rem;
+      max-width: 1.89rem;
       text-align: left;
     }
     .chat-img {

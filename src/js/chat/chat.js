@@ -59,7 +59,7 @@ function open() {
  */
 function join() {
     mod.conn.joinChatRoom({
-        roomId: g.charRoomId
+        roomId: g.chatRoomId
     });
 }
 
@@ -68,38 +68,41 @@ function join() {
  * 发送消息
  */
 function sendMsg(data) {
-    var id = mod.conn.getUniqueId();
-    var msg = new WebIM.message("txt", id);
-    var send = JSON.stringify(data);
-    var option = {
-        msg: send, // 消息内容
-        to: g.chatRoomId, // 接收消息对象(群组id)
-        roomType: true, // 群聊类型，true时为聊天室，false时为群组
-        success: function (msg) {
-            var obj = {
-                openId: g.openId,
-                liveId: g.liveId,
-                type: data.type,
-                content: data.content
-            };
-            if (data.to_type) obj.toUser = data.to_type;
+    return new Promise((resolve, reject) => {
+        var id = mod.conn.getUniqueId();
+        var msg = new WebIM.message("txt", id);
+        var send = JSON.stringify(data);
+        var option = {
+            msg: send, // 消息内容
+            to: g.chatRoomId, // 接收消息对象(群组id)
+            roomType: true, // 群聊类型，true时为聊天室，false时为群组
+            success: function (msg) {
+                var obj = {
+                    openId: g.openId,
+                    liveId: g.liveId,
+                    type: data.type,
+                    content: data.content
+                };
+                if (data.to_type) obj.toUser = data.to_type;
+                resolve(data);
+                post(config.getUrl(config.sendMsg), obj)
+                    .then(function (resp) {
+                        utils.log("%c[sendmsg] 聊天记录留存", "color:green", resp);
+                    }).catch(function (err) {
+                        utils.warn(err);
+                    });
+                utils.log("%c [success] send msg ", "color:green", msg);
+            }, // 对成功的相关定义，sdk会将消息id登记到日志进行备份处理
+            fail: function (msg) {
+                utils.error(msg);
+            } // 对失败的相关定义，sdk会将消息id登记到日志进行备份处理
+        };
+        msg.set(option);
+        msg.setGroup("groupchat"); // 群聊类型
+        mod.conn.send(msg.body);
+        utils.log("%c[send msg] 发送消息:", "color:blue", msg.body);
+    })
 
-            post(config.getUrl(config.sendMsg), obj)
-                .then(function (resp) {
-                    utils.log("%c[sendmsg] 聊天记录留存", "color:green", resp);
-                }).catch(function (err) {
-                    utils.warn(err);
-                });
-            utils.log("%c [success] send msg ", "color:green", msg);
-        }, // 对成功的相关定义，sdk会将消息id登记到日志进行备份处理
-        fail: function (msg) {
-            utils.error(msg);
-        } // 对失败的相关定义，sdk会将消息id登记到日志进行备份处理
-    };
-    msg.set(option);
-    msg.setGroup("groupchat"); // 群聊类型
-    mod.conn.send(msg.body);
-    utils.log("%c[send msg] 发送消息:", "color:blue", msg.body);
 }
 
 /**

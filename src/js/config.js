@@ -1,6 +1,7 @@
 var AppConfig = {
     version: "1.0.1",
     ip: "http://demo.csjlive.com",
+    client:"http://demo.csjlive.com",
     port: "",
     isDebug: true,
     /**微信appid*/

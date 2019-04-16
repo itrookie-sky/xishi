@@ -28,9 +28,13 @@ class Weixin {
         let openId = utils.storage.getData(localKey.openId);
         if (!openId) {
             utils.log("微信授权");
-            let url = location.href.split("#")[0];
+            let url = this.getUrl();
             this.getAccessCode(config.appid, url);
         }
+    }
+
+    getUrl() {
+        return config.client;
     }
 
     getAccessCode(appid, url) {
@@ -157,6 +161,23 @@ class Weixin {
             });
         })
 
+    }
+
+    /**支付 */
+    pay(timestamp, nonceStr, prepay_id, paySign, success) {
+        wx.checkJsApi({
+            jsApiList: ['chooseWXPay'],
+            success: function () {
+                wx.chooseWXPay({
+                    timestamp: timestamp,
+                    nonceStr: nonceStr,
+                    package: prepay_id,
+                    paySign: paySign,
+                    signType: "MD5",
+                    success: success
+                });
+            }
+        });
     }
 }
 let weixin = new Weixin();

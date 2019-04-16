@@ -27,6 +27,7 @@
     "vue": "^2.5.21",
     "vue-router": "^3.0.1",
     "vue-seamless-scroll": "^1.1.16",
+    "vue-video-player": "^5.0.2",
     "weixin-js-sdk": "^1.4.0-test"
   },
   "devDependencies": {
