@@ -57,16 +57,10 @@
           <li
             v-for="(item,idx) in record"
             :key="idx"
-            :class="{'color-gray':item.state==1,'color-red':item.state==2}"
+            :class="{'color-gray':item.type=='dec','color-red':item.type=='add'}"
           >
-            <p>{{item.timestamp}}</p>
-            <p>
-              <span>从</span>
-              <span>{{item.name}}</span>
-              <span>红包抢到</span>
-              <span>{{item.money}}</span>
-              <span>元</span>
-            </p>
+            <p>{{item.created}}</p>
+            <p>{{item.des}}</p>
           </li>
         </ul>
       </div>
@@ -76,7 +70,7 @@
 <script>
 import config from "../js/config.js";
 import g from "../js/global.js";
-import Utils from "../js/utils";
+import utils from "../js/utils";
 export default {
   data() {
     return {
@@ -89,19 +83,28 @@ export default {
         "只有余额大于0时才可以提取余额",
         "提现时到账时间为1个工作日内"
       ],
-      log: [],
       record: [
         {
-          name: "三个字",
-          timestamp: "2018-11-11 12:12",
-          money: "999.99",
-          state: 1
+          id: 1001,
+          customer_id: 1000,
+          open_id: "123456",
+          live_id: 1000,
+          amount: 50,
+          type: "dec",
+          des: "发送了红包50元",
+          created: 1555603256,
+          is_del: 0
         },
         {
-          name: "三个字",
-          timestamp: "2018-11-11 12:12",
-          money: "999.99",
-          state: 2
+          id: 1000,
+          customer_id: 1000,
+          open_id: "123456",
+          live_id: 1000,
+          amount: 20,
+          type: "add",
+          des: "从张三那抢红包获得20元",
+          created: 1555603200,
+          is_del: 0
         }
       ],
       state: 1,
@@ -135,7 +138,12 @@ export default {
     onBackTap(ev) {
       this.$router.replace("/live");
     },
-    onTrue(ev) {},
+    onTrue(ev) {
+      this.$message({
+        message: "提现成功",
+        type: "success"
+      });
+    },
     onPass(ev) {
       this.state = 1;
     }
@@ -151,7 +159,12 @@ export default {
       .then(function(resp) {
         if (resp.data.success) {
           _this.money = resp.data.data.amount;
-          _this.log = resp.data.data.log;
+          let log = resp.data.data.log;
+          for (let i = 0; i < log.length; i++) {
+            let item = log[i];
+            item.created = utils.time.getYMDHMSByTimestamp(item.created);
+          }
+          _this.record = log;
         }
       });
   }

@@ -10,11 +10,10 @@
       <div class="chat-hongbao" v-show="state=='money'" @click="onHongbaoTap($event)">
         <img class="hb-bg" src="../../assets/img/hongbao/hongbao_11.png">
         <img class="hb-icon" src="../../assets/img/guide/guide_07.png">
-        <!-- <p class="hb-desc">{{hongbaoDesc}}</p> -->
-
+        <p class="hb-desc">{{hongbaoDesc}}</p>
       </div>
       <div class="chat-img" v-show="state=='img'||state=='emoji'||state=='gift'">
-        <img :src="testSrc">
+        <img :src="imgSrc">
       </div>
     </div>
   </div>
@@ -65,12 +64,12 @@ export default {
           src = this.testSrc;
           break;
       }
-      return this.src;
+      return src;
     },
     hongbaoDesc() {
       let desc = "";
       if (this.msg.type == "money") {
-        switch (this.msg.to_type) {
+        switch (+this.msg.to_type) {
           case 0:
             desc = "新人专属";
             break;
@@ -150,6 +149,7 @@ export default {
     }
     .chat-img {
       min-width: 1.88rem;
+      max-width: 1.89rem;
       > img {
         width: 100%;
       }

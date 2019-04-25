@@ -10,6 +10,9 @@
       <div class="chat-inner">
         <chat-item v-for="(item,index) in chatList" :key="index" :msg="item"></chat-item>
       </div>
+      <div class="chat-an" v-show="anShow">
+        <component :is="anCom" @an-complete="anShowHandler"></component>
+      </div>
     </section>
     <!-- 聊天输入 -->
     <section class="chat-func">
@@ -28,14 +31,14 @@
     </section>
     <rank v-show="showRank" @close="mgrShow" :is-small="true"></rank>
     <sign-in v-show="showSignIn" @close="mgrShow"></sign-in>
-    <hongbao v-show="showHongBao" @close="mgrShow"></hongbao>
+    <hongbao v-show="showHongBao" @close="mgrShow" @send-msg="onPanelMsg"></hongbao>
     <chat-hongbao v-show="showChatHongbao" @close="mgrShow"></chat-hongbao>
-    <give v-show="showGive" @close="mgrShow"></give>
+    <give v-show="showGive" @close="mgrShow" :list="giftList" @send-msg="onPanelMsg"></give>
   </div>
 </template>
 <script>
 import utils from "../../js/utils";
-import { exists } from "fs";
+import { exists, utimes } from "fs";
 import Rank from "./Rank.vue";
 import SignIn from "./SignIn.vue";
 import Hongbao from "./Hongbao.vue";
@@ -44,7 +47,9 @@ import Give from "./Give.vue";
 import ChatItem from "./ChatItem.vue";
 import IM from "../../js/chat/chat.js";
 import g from "../../js/global.js";
-import { msgType } from "../../js/const.js";
+import { msgType, giftTitle } from "../../js/const.js";
+import config from "../../js/config.js";
+import anConf from "../../js/animation/animation.js";
 export default {
   props: {
     chatLink: String
@@ -65,7 +70,10 @@ export default {
       showHongBao: false,
       showChatHongbao: false,
       showGive: false,
-      chatList: []
+      chatList: [],
+      giftList: [],
+      anShow: false,
+      anCom: null
     };
   },
   methods: {
@@ -81,7 +89,20 @@ export default {
       this.$router.replace("/money");
     },
     onLiwuTap(ev) {
+      var _this = this;
       this.showGive = true;
+      _this
+        .$post(config.getUrl(config.giftList), {
+          openId: g.openId,
+          liveId: g.liveId,
+          page: 1,
+          page_size: 6
+        })
+        .then(function(resp) {
+          if (resp.data.success) {
+            _this.giftList = resp.data.list;
+          }
+        });
     },
     onHongBaoTap(ev) {
       this.showHongBao = true;
@@ -95,12 +116,52 @@ export default {
         _this.chatList.push(data);
       });
     },
-    onBiaoqingTap(ev) {},
+    onBiaoqingTap(ev) {
+      let _this = this;
+      let msg = IM.getBaseMsg(
+        msgType.emoji,
+        config.getResUrl(config.emoji, "daji", ".gif")
+      );
+      IM.sendMsg(msg).then(function(data) {
+        _this.chatInput = "";
+        _this.chatList.push(data);
+      });
+    },
     onCameraTap(ev) {},
-    onImgTap(ev) {},
+    onImgTap(ev) {
+      let _this = this;
+      let msg = IM.getBaseMsg(
+        msgType.img,
+        "http://demo.csjlive.com/res/img/effect_boom.png"
+      );
+      IM.sendMsg(msg).then(function(data) {
+        _this.chatInput = "";
+        _this.chatList.push(data);
+      });
+    },
     onMessage(msg) {
       let data = JSON.parse(msg.data);
       this.chatList.push(data);
+      this.parseMsg(data);
+    },
+    onPanelMsg(data) {
+      utils.log("接收页面消息", data);
+      this.chatList.push(data);
+      this.parseMsg(data);
+    },
+    parseMsg(data) {
+      var _this = this;
+      switch (data.type) {
+        case msgType.gift:
+          this.anShow = true;
+          this.anCom = anConf.config[data.animation];
+          break;
+      }
+    },
+    anShowHandler(data) {
+      utils.log("%c[animation compelet]", "color:green");
+      this.anShow = false;
+      this.anCom = null;
     },
     /**界面管理 */
     mgrShow(params) {
@@ -129,27 +190,27 @@ export default {
     this.$nextTick(function() {
       IM.conn.listen({
         onOpened: function(msg) {
-          utils.log("%c [opened] 连接已成功建立", "color: green");
+          utils.log("%c[opened] 连接已成功建立", "color: green");
           IM.join();
         },
         onClosed: function(msg) {
-          utils.log("%c [closed] 连接已关闭", "color: red");
+          utils.log("%c[closed] 连接已关闭", "color: red");
         },
         onTextMessage: function(msg) {
-          utils.log("%c [msg] 收到文本消息 ", "color:blue", msg);
+          utils.log("%c[msg] 收到文本消息 ", "color:blue", msg);
           _this.onMessage(msg);
         },
         onOnline: function(msg) {
-          utils.log("%c [online] 用户已经成功连接", "color: green");
+          utils.log("%c[online] 用户已经成功连接", "color: green");
         },
         onOffline: function(msg) {
-          utils.log("%c [offline] 用户已经离线", "color:red");
+          utils.log("%c[offline] 用户已经离线", "color:red");
         },
         onError: function(msg) {
-          utils.warn("%c [error] 错误处理: ", "color: red", msg);
+          utils.warn("%c[error] 错误处理: ", "color: red", msg);
         },
         onPresence: function(msg) {
-          console.log("%c [chatroom] state type", "color:red", msg);
+          console.log("%c[chatroom] 加入房间状态", "color:red", msg);
         }
       });
     });
@@ -201,6 +262,14 @@ export default {
     .chat-inner {
       width: 100%;
       min-height: 120%;
+    }
+    .chat-an {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 8;
     }
   }
   /**聊天输入区*/

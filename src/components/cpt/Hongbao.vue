@@ -67,14 +67,19 @@ export default {
   },
   methods: {
     handleChange(ev) {},
-    onHongbaoSend(ev) {},
+    onHongbaoSend(ev) {
+      this.sendHongBao();
+    },
     sendHongBao() {
+      var _this = this;
       let obj = IM.getBaseMsg(msgType.money, this.desc);
       obj.amount = this.money;
       obj.num = this.count;
       obj.to_type = +this.radio;
       obj.id = g.hongbaoId;
-      obj.IM.sendMsg(obj);
+      IM.sendMsg(obj).then(function(data) {
+        _this.$emit("send-msg", data);
+      });
     },
     onClose(ev) {
       this.$emit("close", "hongbao");

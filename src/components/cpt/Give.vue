@@ -25,23 +25,20 @@
   </div>
 </template>
 <script>
+import config from "../../js/config.js";
+import IM from "../../js/chat/chat.js";
+import g from "../../js/global.js";
+import { msgType, giftTitle } from "../../js/const.js";
 export default {
+  props: {
+    list: Array
+  },
   data() {
     return {
       select: 0,
       name: "",
       desc: "",
       gift: [
-        {
-          link: "",
-          title: "一场流星雨",
-          cost: "$999.99"
-        },
-        {
-          link: "",
-          title: "一场流星雨",
-          cost: "$999.99"
-        },
         {
           link: "",
           title: "一场流星雨",
@@ -87,7 +84,21 @@ export default {
     onGiftSelect(idx) {
       this.select = idx;
     },
-    giveGift(ev) {}
+    giveGift(ev) {
+      let _this = this;
+      let msg = IM.getBaseMsg(msgType.gift);
+      msg.title = giftTitle.aishen;
+      msg.img = config.getResUrl(config.gift, "effect_" + giftTitle.aishen);
+      msg.animation = giftTitle.aishen;
+      IM.sendMsg(msg).then(function(data) {
+        _this.$emit("send-msg", data);
+        _this.$emit("close", "give");
+      });
+    }
+  },
+  mounted() {
+    var _this = this;
+    this.$nextTick(function() {});
   }
 };
 </script>
@@ -97,7 +108,7 @@ export default {
   z-index: 6;
   left: 5%;
   right: 5%;
-  bottom: .1rem;
+  bottom: 0.1rem;
   height: 4rem;
   background-color: $xs-color-theme1;
   border: $xs-border-0;

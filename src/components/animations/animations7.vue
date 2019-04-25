@@ -9,7 +9,7 @@
       <img class="boom" src="../../assets/img/effect/animations/effect_boom.png">
     </div>
     <div class="people">
-      <div class="people-container">
+      <div class="people-container" ref="people">
         <img class="men" src="../../assets/img/effect/animations/effect_men.png">
         <img class="women" src="../../assets/img/effect/animations/effect_women.png">
       </div>
@@ -17,8 +17,23 @@
   </div>
 </template>
 <script>
+import utils from "../../js/utils.js";
 export default {
-  methods: {}
+  methods: {
+    onEnd() {
+      this.$emit("an-complete");
+    }
+  },
+  mounted() {
+    var _this = this;
+    this.$nextTick(function() {
+      utils.log("监听动画播放结束", _this.$refs);
+      _this.$refs.people.addEventListener("animationend", function() {
+        _this.onEnd();
+        utils.log("动画播放结束");
+      });
+    });
+  }
 };
 </script>
 <style lang="scss" >

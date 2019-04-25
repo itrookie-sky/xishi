@@ -60,7 +60,7 @@
         <el-form-item label="电话" label-width=".6rem">
           <el-row type="flex" justify="space-between">
             <el-col :span="15">
-              <el-input v-model="formAlign.region"></el-input>
+              <el-input v-model="formAlign.tel"></el-input>
             </el-col>
             <el-col :span="9">
               <label class="sf-code-lab" @click="getfCode">获取验证码</label>

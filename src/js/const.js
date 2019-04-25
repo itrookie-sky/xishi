@@ -18,3 +18,7 @@ export const msgType = {
     money: "money",
     gift: "gift"
 }
+
+export const giftTitle={
+    aishen:"aishen"
+}

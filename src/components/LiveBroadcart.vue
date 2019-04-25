@@ -72,7 +72,7 @@
       <!-- 活动区 -->
       <div class="active-content">
         <keep-alive>
-          <component :is="curActiveCpt"></component>
+          <component :is="curActiveCpt" @video-src="setVideoSrc"></component>
         </keep-alive>
       </div>
     </section>
@@ -159,6 +159,10 @@ export default {
     },
     onPlayerPause(player) {
       utils.log("%c[video pause] 视频暂停", "color:red");
+    },
+    setVideoSrc(src) {
+      utils.log("%c[video src] 视频播放地址切换", "color:green", src);
+      this.player.src(src);
     }
   },
   mounted: function() {

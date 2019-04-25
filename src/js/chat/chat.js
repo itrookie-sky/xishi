@@ -4,7 +4,7 @@ import g from "../global.js";
 import config from "../config.js";
 import utils from "../utils.js";
 import { post } from "../http/http.js";
-
+import { msgType } from "../const.js";
 
 
 
@@ -81,7 +81,7 @@ function sendMsg(data) {
                     openId: g.openId,
                     liveId: g.liveId,
                     type: data.type,
-                    content: data.content
+                    content: send
                 };
                 if (data.to_type) obj.toUser = data.to_type;
                 resolve(data);
@@ -91,7 +91,7 @@ function sendMsg(data) {
                     }).catch(function (err) {
                         utils.warn(err);
                     });
-                utils.log("%c [success] send msg ", "color:green", msg);
+                utils.log("%c[success] send msg ", "color:green", msg);
             }, // 对成功的相关定义，sdk会将消息id登记到日志进行备份处理
             fail: function (msg) {
                 utils.error(msg);

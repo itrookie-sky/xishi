@@ -1,8 +1,14 @@
 var AppConfig = {
     version: "1.0.1",
-    ip: "http://demo.csjlive.com",
-    client:"http://demo.csjlive.com",
     port: "",
+    ip: "http://demo.csjlive.com",
+    client: "http://demo.csjlive.com",
+    /**表情 线上目录 */
+    res: "/res",
+    img: "/img",
+    gift: "/gift",
+    emoji: "/emoji",
+
     isDebug: true,
     /**微信appid*/
     appid: "wxc9773ab548d317cb",
@@ -23,7 +29,7 @@ var AppConfig = {
     /**直播页接口 */
     live: "/v1/index/index",
     /**添加聊天记录 */
-    sendMsg: "/chat/sendMsg",
+    sendMsg: "/v1/chat/sendMsg",
     /**签到 */
     regin: "/v1/user/regin",
     /**获取校验码 */
@@ -31,11 +37,24 @@ var AppConfig = {
     /**发送验证码的接口 */
     sendVCode: "/v1/user/sendVCode",
     /**我的余额 */
-    amount: "/user/getAmount",
+    amount: "/v1/user/getAmount",
     /**上传图片 */
     uploadImg: "/v1/chat/upload",
+    /**打赏列表 */
+    giftList: "/v1/chat/giftList",
+    /**获取当家指数贡献排行 */
+    happy: "/v1/chat/videoList",
+    /**排行榜 */
+    exponent: "/v1/chat/exponent",
+    /**请求微信签名 */
+    wxSign: "/v1/user/getSignPackage",
+
     getUrl(path) {
         return this.ip + path;
+    },
+    getResUrl(path, name, format) {
+        if (!format) format = ".png";
+        return this.ip + this.res + path + "/" + name + format;
     }
 };
 
