@@ -19,7 +19,12 @@ const jsApiList = [
     "onVoicePlayEnd",
     "uploadVoice",
     "downloadVoice",
-    "getLocation"
+    "getLocation",
+    "chooseWXPay",
+    "downloadImage",
+    "getLocalImgData",
+    "chooseImage",
+    "uploadImage"
 ];
 
 class Weixin {
@@ -34,6 +39,7 @@ class Weixin {
     }
 
     getUrl() {
+        // return location.href.split('#')[0];
         return config.client;
     }
 
@@ -59,39 +65,31 @@ class Weixin {
     config(timestamp, nonceStr, signature) {
         var s = this;
 
-        wx.ready(function () {
-            s.hideMenuItems();
+        wx.ready(function (resp) {
+            // s.hideMenuItems();
         });
 
         wx.config({
-            debug: true, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
-            appId: config.APPid, // 必填，公众号的唯一标识
+            debug: config.wxDebug, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+            appId: config.appid, // 必填，公众号的唯一标识
             timestamp: timestamp, // 必填，生成签名的时间戳
             nonceStr: nonceStr, // 必填，生成签名的随机串
             signature: signature, // 必填，签名
             jsApiList: jsApiList // 必填，需要使用的JS接口列表
         });
+
+
     }
 
     hideMenuItems() {
         wx.hideMenuItems({
-            "menuList": [
+            menuList: [
                 "menuItem:share:timeline",
                 "menuItem:share:qq",
-                "menuItem:share:weiboApp",
                 "menuItem:share:facebook",
                 "menuItem:share:QZone",
                 "menuItem:share:timeline",
-                "menuItem:editTag",
-                "menuItem:delete",
-                // "menuItem:copyUrl",
-                "menuItem:originPage",
-                "menuItem:readMode",
-                "menuItem:openWithQQBrowser",
-                "menuItem:openWithSafari",
                 "menuItem:share:email",
-                "menuItem:favorite",
-                "menuItem:share:brand"
             ]
         });
     }
@@ -104,33 +102,50 @@ class Weixin {
                 sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
                 success: function (res) {
                     var localIds = res.localIds; // 返回选定照片的本地ID列表，localId可以作为img标签的src属性显示图片
-                    utils.log("%[wx chooseImage]微信选择图片接口", "color:green", res);
+                    utils.log("%c[wx chooseImage]微信选择图片接口", "color:green", res);
                     resolve(res.localIds);
+                },
+                fail: function (res) {
+                    utils.log("%c[wx chooseImage]微信选择图片接口失败", "color:red", res);
                 }
             })
         })
     }
 
     uploadImg() {
-        this.chooseImage().then(function (localIds) {
-            for (let localid of localIds) {
-                wx.uploadImage({
-                    localId: localid, // 需要上传的图片的本地ID，由chooseImage接口获得
-                    isShowProgressTips: 1, // 默认为1，显示进度提示
-                    success: function (res) {
-                        var serverId = res.serverId; // 返回图片的服务器端ID
-                        post(config.getUrl(config.uploadImg), {
-                            openId: g.openId,
-                            img: serverId
-                        }).then(function (resp) {
-                            if (resp.data.success) {
-
+        return new Promise((resolve, reject) => {
+            this.chooseImg().then(function (localIds) {
+                var curIndex = 0;
+                var servers = [];
+                for (let localid of localIds) {
+                    wx.uploadImage({
+                        localId: localid, // 需要上传的图片的本地ID，由chooseImage接口获得
+                        isShowProgressTips: 1, // 默认为1，显示进度提示
+                        success: function (res) {
+                            var serverId = res.serverId; // 返回图片的服务器端ID
+                            utils.log("%c[wx uploadImg] 微信上传图片成功", serverId);
+                            curIndex++;
+                            servers.push(serverId);
+                            if (curIndex >= localIds.length) {
+                                resolve(servers);
                             }
-                        });
-                    }
-                });
-            }
-        });
+                            /*  post(config.getUrl(config.uploadImg), {
+                                 openId: g.openId,
+                                 img: serverId
+                             }).then(function (resp) {
+                                 if (resp.data.success) {
+ 
+                                 }
+                             }); */
+                        },
+                        fail: function (res) {
+                            utils.log("%[wx uploadImage]微信选择图片接口失败", "color:red", res);
+                        }
+                    });
+                }
+            });
+        })
+
     }
 
     downImg(serverId) {
@@ -141,6 +156,9 @@ class Weixin {
                 success: function (res) {
                     var localId = res.localId; // 返回图片下载后的本地ID
                     resolve(localId);
+                },
+                fail: function (res) {
+                    utils.log("%[wx downloadImage]微信选择图片接口失败", "color:red", res);
                 }
             });
         })
@@ -164,20 +182,33 @@ class Weixin {
     }
 
     /**支付 */
-    pay(timestamp, nonceStr, prepay_id, paySign, success) {
-        wx.checkJsApi({
-            jsApiList: ['chooseWXPay'],
-            success: function () {
-                wx.chooseWXPay({
-                    timestamp: timestamp,
-                    nonceStr: nonceStr,
-                    package: prepay_id,
-                    paySign: paySign,
-                    signType: "MD5",
-                    success: success
-                });
-            }
+    pay(timestamp, nonceStr, prepay_id, paySign) {
+        return new Promise(function (resolve, reject) {
+            wx.checkJsApi({
+                jsApiList: ['chooseWXPay'],
+                success: function () {
+
+                    wx.chooseWXPay({
+                        timestamp: timestamp,
+                        nonceStr: nonceStr,
+                        package: `prepay_id=${prepay_id}`,
+                        paySign: paySign,
+                        signType: "MD5",
+                        success: function (resp) {
+                            utils.log("%c[wx pay] 支付成功", "color:green", resp);
+                            resolve(resp);
+                        },
+                        cencel: function (resp) {
+                            utils.log("%c[wx pay] 支付取消", "color:red", resp);
+                        },
+                        fail: function (resp) {
+                            utils.log("%c[wx pay] 支付失败", "color:red", resp);
+                        }
+                    });
+                }
+            });
         });
+
     }
 }
 let weixin = new Weixin();

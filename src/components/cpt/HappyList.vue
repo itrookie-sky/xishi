@@ -60,9 +60,7 @@ export default {
     .happy-item {
       height: 1.45rem;
       flex: 0 0 50%;
-      border: $xs-border-1;
       > img {
-        border: $xs-border-1;
         width: 95%;
         height: 1.1rem;
         margin: 0 auto;

@@ -1,8 +1,8 @@
-import wx from './weixin'
-import utils from './utils'
-import config from './config'
+import wx from './weixin.js'
+import utils from './utils.js'
+import config from './config.js'
 import { localKey } from './const.js'
-import { post } from './http/http.js'
+import { post, fetch } from './http/http.js'
 import IM from './chat/chat.js'
 import weixin from './weixin';
 
@@ -56,20 +56,28 @@ const Global = {
         "is_del": "0"
     }, //直播界面数据初始化
     chatRoomId: "78895638446081",
+    appSecret: null,
 
     init() {
-        this.liveId = utils.getUrlParams("liveid");
+        let liveId = utils.getUrlParams("liveid");
+        if (liveId) this.liveId = liveId;
+        utils.log("liveid:", this.liveId);
         this.login();
         IM.init();
     },
 
     login() {
-        // let openId = utils.storage.getData(localKey.openId);
-        // if (openId) {
-        //     this.openId = openId;
-        // } else {
-        this.getCode();
-        // }
+        var self = this;
+        fetch(config.configSrc).then(function (resp) {
+            if (resp.status == 200) {
+                utils.log("%c[config] 获取配置文件成功", "color:green");
+                let data = resp.data;
+                for (let key in data) {
+                    config[key] = data[key];
+                }
+                self.getCode();
+            }
+        });
     },
 
     getCode() {
@@ -95,6 +103,20 @@ const Global = {
                     } else {
                         self.userInfo = data;
                         self.openId = data.openid;
+                        //请求签名
+                        post(config.getUrl(config.wxSign), {
+                            openId: self.openId,
+                            liveId: self.liveId
+                        }).then(function (resp) {
+                            if (resp.data.success) {
+                                self.appSecret = resp.data.data;
+                                weixin.config(
+                                    self.appSecret.timestamp,
+                                    self.appSecret.nonceStr,
+                                    self.appSecret.signature
+                                );
+                            }
+                        });
                     }
                 } else {
                     console.warn("获取用户信息失败");

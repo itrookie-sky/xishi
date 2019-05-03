@@ -1,23 +1,27 @@
 <template>
-  <div>
-    <!-- <div class="demo-container">
-      <ul class="demo-list">
-        <li>
-          <component :is="curAn"></component>
-        </li>
-      </ul>
+  <div class="demo-outter">
+    <div class="demo-inner">
+      <!-- <div class="demo-container">
+        <ul class="demo-list">
+          <li>
+            <component :is="curAn"></component>
+          </li>
+        </ul>
+      </div>
+      <el-button type="success" @click="onChange($event)">点击切换特效</el-button>
+      <el-button type="success" @click="onIMopen($event)">聊天登录</el-button>
+      <el-button type="success" @click="onIMmsg($event)">聊天发消息</el-button>
+      <el-button type="success" @click="onIMJoin($event)">加入聊天室</el-button>
+      <el-button type="success" @click="onIMQuit($event)">退出聊天室</el-button>
+      <el-button type="success" @click="onIMrg($event)">聊天注册</el-button>
+      <el-button type="success" @click="onAlert($event)">点击弹窗</el-button>
+      <el-button type="success" @click="onMsg($event)">点击消息</el-button>
+      <el-button type="success" @click="onHappy($event)">请求幸福时刻列表</el-button>
+      <el-button type="success" @click="onRank($event)">请求排行榜</el-button>
+      <el-button type="success" @click="getWXAcc($event)">请求微信签名</el-button>-->
+      <el-button type="success" @click="onHongbaoSend($event)">发送微信红包</el-button>
+      <el-button type="success" @click="onGive($event)">请求礼物列表</el-button>
     </div>
-    <el-button type="success" @click="onChange($event)">点击切换特效</el-button>-->
-    <!-- <el-button type="success" @click="onIMopen($event)">聊天登录</el-button>
-    <el-button type="success" @click="onIMmsg($event)">聊天发消息</el-button>
-    <el-button type="success" @click="onIMJoin($event)">加入聊天室</el-button>
-    <el-button type="success" @click="onIMQuit($event)">退出聊天室</el-button>
-    <el-button type="success" @click="onIMrg($event)">聊天注册</el-button>
-    <el-button type="success" @click="onAlert($event)">点击弹窗</el-button>
-    <el-button type="success" @click="onMsg($event)">点击消息</el-button>-->
-    <el-button type="success" @click="onHappy($event)">请求幸福时刻列表</el-button>
-    <el-button type="success" @click="onRank($event)">请求排行榜</el-button>
-     <el-button type="success" @click="getWXAcc($event)">请求微信签名</el-button>
   </div>
 </template>
 <script>
@@ -28,10 +32,11 @@ import an7 from "./animations/animations7.vue";
 import IM from "../js/chat/chat.js";
 import g from "../js/global.js";
 import WebIM from "easemob-websdk";
-import Utils from "../js/utils";
+import utils from "../js/utils";
 import { post } from "../js/http/http.js";
 import config from "../js/chat/webim.config";
 import conf from "../js/config.js";
+import weixin from "../js/weixin.js";
 export default {
   components: {
     an1: an1,
@@ -103,7 +108,8 @@ export default {
 
       var option = {
         apiUrl: IM.conn.config.apiURL,
-        user: g.openId,
+        // user: g.openId,
+        user: "big_1000",
         pwd: g.IMpassword,
         appKey: IM.conn.config.appkey
       };
@@ -200,34 +206,79 @@ export default {
         page_size: 6
       });
     },
-    onRank(){
+    onRank() {
       post(conf.getUrl(conf.exponent), {
         openId: g.openId,
         liveId: g.liveId,
         page_size: 6
       });
     },
-    getWXAcc(){
-       post(conf.getUrl(conf.wxSign), {
+    getWXAcc() {
+      post(conf.getUrl(conf.wxSign), {
         openId: g.openId,
         liveId: g.liveId
+      });
+    },
+    onHongbaoSend(ev) {
+      var self = this;
+      post(conf.getUrl(conf.sendHongbao), {
+        liveId: g.liveId,
+        openId: g.openId,
+        receiver: 0,
+        money: 0.01,
+        num: 1,
+        blessing: "发送红包"
+      }).then(function(resp) {
+        if (resp.data.success) {
+          var payData = resp.data.data;
+          g.hongbaoId = payData.order_no;
+          utils.log("%c[wx pay] 调用支付", "color:blue");
+          //微信支付
+          weixin
+            .pay(
+              payData.timeStamp,
+              payData.nonceStr,
+              payData.prepay_id,
+              payData.paySign
+            )
+            .then(function(pay) {
+              utils.log("%c[wx pay] 支付成功", "color:green", pay);
+              if (pay.err_msg == "get_brand_wcpay_request:ok") {
+                this.sendHongbao();
+              }
+            });
+        }
+      });
+    },
+    onGive(ev) {
+      post(conf.getUrl(conf.giftList), {
+        openId: g.openId,
+        liveId: g.liveId,
+        page: 1,
+        page_size: 20
       });
     }
   }
 };
 </script>
 <style  lang="scss">
-.demo-container {
-  position: relative;
-  /* border: 1px solid #000; */
-  margin: 0 auto;
-  .demo-list {
-    width: 100%;
-    li {
-      width: 3.5rem;
-      height: 3rem;
-      margin: 0 auto 0.2rem;
-      border: $xs-border-1;
+.demo-outter {
+  overflow-x: hidden;
+  overflow-y: scroll;
+  .demo-inner {
+    .demo-container {
+      position: relative;
+      /* border: 1px solid #000; */
+      margin: 0 auto;
+      .demo-list {
+        width: 100%;
+        li {
+          width: 3.5rem;
+          height: 3rem;
+          margin: 0 auto 0.2rem;
+          border: $xs-border-1;
+        }
+      }
     }
   }
 }

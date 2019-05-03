@@ -34,11 +34,13 @@ axios.interceptors.response.use(
  */
 export function fetch(url, params = {}) {
     return new Promise((resolve, reject) => {
-        axiox.get(url, {
+        utils.log(`request<<<${url}`, params);
+        axios.get(url, {
             params: params
         })
             .then(response => {
-                resolve(response.data);
+                utils.log(`response>>>${url}`, response);
+                resolve(response);
             })
             .catch(err => {
                 reject(err);
@@ -56,7 +58,7 @@ export function post(url, data = {}) {
         utils.log(`request<<<${url}`, data);
         axios.post(url, data)
             .then(response => {
-                utils.log(`response>>>${url}`, response)
+                utils.log(`response>>>${url}`, response);
                 resolve(response);
             }, err => {
                 reject(err);

@@ -19,6 +19,13 @@ export const msgType = {
     gift: "gift"
 }
 
-export const giftTitle={
-    aishen:"aishen"
+export const giftTitle = {
+    aishen: "cupid",
+    xin: "wings"
+}
+
+export const weixinResp = {
+    payOk: "chooseWXPay:ok",
+    payCancel: "chooseWXPay:cancel",
+    payFail: "chooseWXPay:fail",
 }

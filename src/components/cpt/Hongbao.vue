@@ -54,8 +54,10 @@
 <script>
 import utils from "../../js/utils";
 import IM from "../../js/chat/chat.js";
-import { msgType } from "../../js/const.js";
+import { msgType, weixinResp } from "../../js/const.js";
 import g from "../../js/global.js";
+import config from "../../js/config.js";
+import weixin from "../../js/weixin.js";
 export default {
   data() {
     return {
@@ -68,7 +70,36 @@ export default {
   methods: {
     handleChange(ev) {},
     onHongbaoSend(ev) {
-      this.sendHongBao();
+      var self = this;
+      this.$post(config.getUrl(config.sendHongbao), {
+        liveId: g.liveId,
+        openId: g.openId,
+        receiver: +self.radio,
+        money: +self.money,
+        num: +self.count,
+        blessing: self.desc
+      }).then(function(resp) {
+        if (resp.data.success) {
+          var payData = resp.data.data;
+          g.hongbaoId = payData.order_no;
+          utils.log("%c[wx pay] 调用支付", "color:blue");
+          //微信支付
+          weixin
+            .pay(
+              payData.timeStamp,
+              payData.nonceStr,
+              payData.prepay_id,
+              payData.paySign
+            )
+            .then(function(pay) {
+              switch (pay.errMsg) {
+                case weixinResp.payOk:
+                  self.sendHongBao();
+                  break;
+              }
+            });
+        }
+      });
     },
     sendHongBao() {
       var _this = this;

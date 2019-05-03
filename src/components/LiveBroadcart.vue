@@ -234,6 +234,9 @@ export default {
 .live-top {
   width: 100%;
   height: 33.33%;
+  .video-player {
+    height: 100%;
+  }
 }
 .live-video {
   width: 100%;

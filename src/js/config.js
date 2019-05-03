@@ -8,12 +8,17 @@ var AppConfig = {
     img: "/img",
     gift: "/gift",
     emoji: "/emoji",
+    configSrc: `http://demo.csjlive.com/res/config/liveconfig.json`,
 
     isDebug: true,
+    wxDebug: true,
     /**微信appid*/
-    appid: "wxc9773ab548d317cb",
+    appid: "wx41e6ffacc036a4da",
     /**微信秘钥 */
-    appsecret: "3acae05dcee6d22c5cfb67f784bca7f1",
+    appsecret: "96b8298d471a07f1b5e605cd2b2c458a",
+    //测试号
+    // appid: "wxc9773ab548d317cb",
+    // appsecret: "3acae05dcee6d22c5cfb67f784bca7f1",
     /**网易appid */
     wyAppid: "fd245094b3a2ef23917eb657f702b72b",
     /**网易云秘钥 */
@@ -48,6 +53,8 @@ var AppConfig = {
     exponent: "/v1/chat/exponent",
     /**请求微信签名 */
     wxSign: "/v1/user/getSignPackage",
+    /**发送红包 */
+    sendHongbao: "/v1/user/sendHongbao",
 
     getUrl(path) {
         return this.ip + path;

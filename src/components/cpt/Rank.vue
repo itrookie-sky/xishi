@@ -59,7 +59,7 @@
           <div class="rank-item" v-for="(val,idx) in test" :key="idx">
             <div class="ri-progress" :style="{'width':val.pro+'%'}"></div>
             <div class="ri-text">
-              <span>Top{{val.top}}</span>
+              <span>Top{{idx}}</span>
               <span>{{val.name}}</span>
               <span>{{val.content}}</span>
             </div>
@@ -84,6 +84,9 @@ export default {
     isSmall: {
       type: Boolean,
       default: true
+    },
+    people: {
+      type: Array
     }
   },
   data() {
@@ -107,9 +110,7 @@ export default {
     },
     handleClick(tab, event) {}
   },
-  mounted(){
-
-  }
+  mounted() {}
 };
 </script>
 <style lang="scss" >
@@ -193,7 +194,7 @@ export default {
     z-index: 6;
     width: 94%;
     min-height: 4rem;
-    bottom: .1rem;
+    bottom: 0.1rem;
     left: 50%;
     transform: translateX(-50%);
     background-color: #fff;

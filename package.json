@@ -21,6 +21,7 @@
     "element-theme": "^2.0.1",
     "element-ui": "^2.4.11",
     "lib-flexible": "^0.3.2",
+    "md5": "^2.2.1",
     "strophe": "^1.2.4",
     "underscore": "^1.9.1",
     "videojs-contrib-hls": "^5.15.0",

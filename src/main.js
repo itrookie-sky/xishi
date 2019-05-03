@@ -1,6 +1,8 @@
 window.onresize = setHtmlFontSize;
 window.onload = setHtmlFontSize;
-
+window.alert = function (msg) {
+    console.log("%c[window alert]", "color:red", msg);
+};
 function setHtmlFontSize() {
     const htmlWidth = document.documentElement.clientWidth || document.body.clientWidth;
     const htmlDom = document.getElementsByTagName('html')[0];
@@ -21,7 +23,7 @@ import 'video.js/dist/video-js.css'
 import 'videojs-contrib-hls'
 import VideoPlayer from 'vue-video-player'
 Vue.use(VideoPlayer);
-require('video.js/dist/video-js.css') 
+require('video.js/dist/video-js.css')
 require('vue-video-player/src/custom-theme.css')
 
 import '../static/css/iconfont/iconfont.css'

@@ -29,7 +29,7 @@
       <div class="cf-camera iconfont icon-xiangji" @click="onCameraTap($event)"></div>
       <div class="cf-img iconfont icon-jiahao" @click="onImgTap($event)" @tap="onImgTap($event)"></div>
     </section>
-    <rank v-show="showRank" @close="mgrShow" :is-small="true"></rank>
+    <rank v-show="showRank" @close="mgrShow" :is-small="true" :people="rankList"></rank>
     <sign-in v-show="showSignIn" @close="mgrShow"></sign-in>
     <hongbao v-show="showHongBao" @close="mgrShow" @send-msg="onPanelMsg"></hongbao>
     <chat-hongbao v-show="showChatHongbao" @close="mgrShow"></chat-hongbao>
@@ -50,6 +50,7 @@ import g from "../../js/global.js";
 import { msgType, giftTitle } from "../../js/const.js";
 import config from "../../js/config.js";
 import anConf from "../../js/animation/animation.js";
+import weixin from "../../js/weixin.js";
 export default {
   props: {
     chatLink: String
@@ -73,13 +74,26 @@ export default {
       chatList: [],
       giftList: [],
       anShow: false,
-      anCom: null
+      anCom: null,
+      rankList: []
     };
   },
   methods: {
     /**互动功能 */
     onTopTap(ev) {
-      this.showRank = true;
+      var _this = this;
+      _this
+        .$post(config.getUrl(config.exponent), {
+          openId: g.openId,
+          liveId: g.liveId,
+          page_size: 50
+        })
+        .then(function(resp) {
+          if (resp.data.success) {
+            _this.showRank = true;
+            _this.rankList = resp.data.data;
+          }
+        });
     },
     onXinTap(ev) {},
     onSignInTap(ev) {
@@ -130,14 +144,15 @@ export default {
     onCameraTap(ev) {},
     onImgTap(ev) {
       let _this = this;
-      let msg = IM.getBaseMsg(
+      /*   let msg = IM.getBaseMsg(
         msgType.img,
         "http://demo.csjlive.com/res/img/effect_boom.png"
       );
       IM.sendMsg(msg).then(function(data) {
         _this.chatInput = "";
         _this.chatList.push(data);
-      });
+      }); */
+      weixin.uploadImg();
     },
     onMessage(msg) {
       let data = JSON.parse(msg.data);

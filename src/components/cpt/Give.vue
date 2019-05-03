@@ -87,8 +87,8 @@ export default {
     giveGift(ev) {
       let _this = this;
       let msg = IM.getBaseMsg(msgType.gift);
-      msg.title = giftTitle.aishen;
-      msg.img = config.getResUrl(config.gift, "effect_" + giftTitle.aishen);
+      msg.title = giftTitle.xin;
+      msg.img = config.getResUrl(config.gift, "effect_" + giftTitle.xin);
       msg.animation = giftTitle.aishen;
       IM.sendMsg(msg).then(function(data) {
         _this.$emit("send-msg", data);
