@@ -39,8 +39,8 @@ class Weixin {
     }
 
     getUrl() {
-        // return location.href.split('#')[0];
-        return config.client;
+        return location.href.split('#')[0];
+        // return config.client;
     }
 
     getAccessCode(appid, url) {
@@ -65,9 +65,6 @@ class Weixin {
     config(timestamp, nonceStr, signature) {
         var s = this;
 
-        wx.ready(function (resp) {
-            // s.hideMenuItems();
-        });
 
         wx.config({
             debug: config.wxDebug, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
@@ -79,6 +76,9 @@ class Weixin {
         });
 
 
+        wx.ready(function (resp) {
+            s.hideMenuItems();
+        });
     }
 
     hideMenuItems() {
@@ -94,21 +94,35 @@ class Weixin {
         });
     }
 
-    chooseImg() {
+    chooseImg(type) {
+        var sourceType;
+        switch (type) {
+            case 1:
+                sourceType = ['camera'];
+            default:
+                sourceType = ['album', 'camera'];
+                break;
+        }
+
         return new Promise((resolve, reject) => {
-            wx.chooseImage({
-                count: 1, // 默认9
-                sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
-                sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
-                success: function (res) {
-                    var localIds = res.localIds; // 返回选定照片的本地ID列表，localId可以作为img标签的src属性显示图片
-                    utils.log("%c[wx chooseImage]微信选择图片接口", "color:green", res);
-                    resolve(res.localIds);
-                },
-                fail: function (res) {
-                    utils.log("%c[wx chooseImage]微信选择图片接口失败", "color:red", res);
+            wx.checkJsApi({
+                jsApiList: ['chooseImage'],
+                success: function () {
+                    wx.chooseImage({
+                        count: 9, // 默认9
+                        sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
+                        sourceType: sourceType, // 可以指定来源是相册还是相机，默认二者都有
+                        success: function (res) {
+                            var localIds = res.localIds; // 返回选定照片的本地ID列表，localId可以作为img标签的src属性显示图片
+                            utils.log("%c[wx chooseImage]微信选择图片接口", "color:green", res);
+                            resolve(res.localIds);
+                        },
+                        fail: function (res) {
+                            utils.log("%c[wx chooseImage]微信选择图片接口失败", "color:red", res);
+                        }
+                    });
                 }
-            })
+            });
         })
     }
 
@@ -117,32 +131,42 @@ class Weixin {
             this.chooseImg().then(function (localIds) {
                 var curIndex = 0;
                 var servers = [];
-                for (let localid of localIds) {
-                    wx.uploadImage({
-                        localId: localid, // 需要上传的图片的本地ID，由chooseImage接口获得
-                        isShowProgressTips: 1, // 默认为1，显示进度提示
-                        success: function (res) {
-                            var serverId = res.serverId; // 返回图片的服务器端ID
-                            utils.log("%c[wx uploadImg] 微信上传图片成功", serverId);
-                            curIndex++;
-                            servers.push(serverId);
-                            if (curIndex >= localIds.length) {
-                                resolve(servers);
-                            }
-                            /*  post(config.getUrl(config.uploadImg), {
-                                 openId: g.openId,
-                                 img: serverId
-                             }).then(function (resp) {
-                                 if (resp.data.success) {
- 
-                                 }
-                             }); */
-                        },
-                        fail: function (res) {
-                            utils.log("%[wx uploadImage]微信选择图片接口失败", "color:red", res);
+                var imgs = [];
+                wx.checkJsApi({
+                    jsApiList: ['uploadImage'],
+                    success: function () {
+                        for (let localid of localIds) {
+                            wx.uploadImage({
+                                localId: localid, // 需要上传的图片的本地ID，由chooseImage接口获得
+                                isShowProgressTips: 1, // 默认为1，显示进度提示
+                                success: function (res) {
+                                    var serverId = res.serverId; // 返回图片的服务器端ID
+                                    utils.log("%c[wx uploadImg] 微信上传图片成功", "color:green", res);
+                                    curIndex++;
+                                    servers.push(serverId);
+                                    if (curIndex >= localIds.length) {
+                                        utils.log("%c[wx uploadImg] 微信上传所有图片成功", "color:green", servers);
+
+                                        post(config.getUrl(config.uploadImg), {
+                                            openId: g.openId,
+                                            img: servers
+                                        }).then(function (resp) {
+                                            if (resp.data.success) {
+                                                utils.log("%c[http uploadImg] 服务器上传图片成功", "color:green", resp);
+                                                resolve(resp.data.data.img);
+                                            }
+                                        });
+
+                                    }
+
+                                },
+                                fail: function (res) {
+                                    utils.log("%[wx uploadImage]微信选择图片接口失败", "color:red", res);
+                                }
+                            });
                         }
-                    });
-                }
+                    }
+                });
             });
         })
 
@@ -150,15 +174,20 @@ class Weixin {
 
     downImg(serverId) {
         return new Promise((resolve, reject) => {
-            wx.downloadImage({
-                serverId: serverId, // 需要下载的图片的服务器端ID，由uploadImage接口获得
-                isShowProgressTips: 1, // 默认为1，显示进度提示
-                success: function (res) {
-                    var localId = res.localId; // 返回图片下载后的本地ID
-                    resolve(localId);
-                },
-                fail: function (res) {
-                    utils.log("%[wx downloadImage]微信选择图片接口失败", "color:red", res);
+            wx.checkJsApi({
+                jsApiList: ['uploadImage'],
+                success: function () {
+                    wx.downloadImage({
+                        serverId: serverId, // 需要下载的图片的服务器端ID，由uploadImage接口获得
+                        isShowProgressTips: 1, // 默认为1，显示进度提示
+                        success: function (res) {
+                            var localId = res.localId; // 返回图片下载后的本地ID
+                            resolve(localId);
+                        },
+                        fail: function (res) {
+                            utils.log("%[wx downloadImage]微信选择图片接口失败", "color:red", res);
+                        }
+                    });
                 }
             });
         })
@@ -178,8 +207,9 @@ class Weixin {
                 }
             });
         })
-
     }
+
+
 
     /**支付 */
     pay(timestamp, nonceStr, prepay_id, paySign) {

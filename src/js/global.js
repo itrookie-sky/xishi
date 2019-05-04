@@ -106,7 +106,8 @@ const Global = {
                         //请求签名
                         post(config.getUrl(config.wxSign), {
                             openId: self.openId,
-                            liveId: self.liveId
+                            liveId: self.liveId,
+                            url: weixin.getUrl()
                         }).then(function (resp) {
                             if (resp.data.success) {
                                 self.appSecret = resp.data.data;

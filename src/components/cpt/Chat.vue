@@ -110,7 +110,7 @@ export default {
           openId: g.openId,
           liveId: g.liveId,
           page: 1,
-          page_size: 6
+          page_size: 50
         })
         .then(function(resp) {
           if (resp.data.success) {
@@ -141,18 +141,29 @@ export default {
         _this.chatList.push(data);
       });
     },
-    onCameraTap(ev) {},
+    onCameraTap(ev) {
+      let _this = this;
+      weixin.uploadImg().then(function(imgs) {
+        for (let url of imgs) {
+          _this.sendImg(url);
+        }
+      });
+    },
+    /**上传图片 */
     onImgTap(ev) {
       let _this = this;
-      /*   let msg = IM.getBaseMsg(
-        msgType.img,
-        "http://demo.csjlive.com/res/img/effect_boom.png"
-      );
+      weixin.uploadImg().then(function(imgs) {
+        for (let url of imgs) {
+          _this.sendImg(url);
+        }
+      });
+    },
+    sendImg(url) {
+      let _this = this;
+      let msg = IM.getBaseMsg(msgType.img, url);
       IM.sendMsg(msg).then(function(data) {
-        _this.chatInput = "";
         _this.chatList.push(data);
-      }); */
-      weixin.uploadImg();
+      });
     },
     onMessage(msg) {
       let data = JSON.parse(msg.data);
@@ -228,6 +239,20 @@ export default {
           console.log("%c[chatroom] 加入房间状态", "color:red", msg);
         }
       });
+
+      _this
+        .$post(config.getUrl(config.getChatList), {
+          openId: g.liveId,
+          liveId: g.openId,
+          page: 0,
+          page_size: 50
+        })
+        .then(function(resp) {
+          if (resp.data.success) {
+            var data = resp.data.data;
+            
+          }
+        });
     });
   }
 };

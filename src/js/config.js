@@ -35,6 +35,8 @@ var AppConfig = {
     live: "/v1/index/index",
     /**添加聊天记录 */
     sendMsg: "/v1/chat/sendMsg",
+    /**获取聊天记录的接口 */
+    getChatList:"/v1/chat/index",
     /**签到 */
     regin: "/v1/user/regin",
     /**获取校验码 */
