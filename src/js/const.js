@@ -20,8 +20,10 @@ export const msgType = {
 }
 
 export const giftTitle = {
-    aishen: "cupid",
-    xin: "wings"
+    taikong: "taikong",
+    liuxing: "liuxing",
+    tianshi: "tianshi",
+    xin: "xin"
 }
 
 export const weixinResp = {

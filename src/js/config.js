@@ -36,7 +36,7 @@ var AppConfig = {
     /**添加聊天记录 */
     sendMsg: "/v1/chat/sendMsg",
     /**获取聊天记录的接口 */
-    getChatList:"/v1/chat/index",
+    getChatList: "/v1/chat/index",
     /**签到 */
     regin: "/v1/user/regin",
     /**获取校验码 */
@@ -57,7 +57,22 @@ var AppConfig = {
     wxSign: "/v1/user/getSignPackage",
     /**发送红包 */
     sendHongbao: "/v1/user/sendHongbao",
-
+    /**表情地址列表 */
+    expression: [
+        "http://demo.csjlive.com/res/emoji/xqxa.gif",
+        "http://demo.csjlive.com/res/emoji/ttmm.gif",
+        "http://demo.csjlive.com/res/emoji/syah.gif",
+        "http://demo.csjlive.com/res/emoji/ssss.gif",
+        "http://demo.csjlive.com/res/emoji/marr-me.gif",
+        "http://demo.csjlive.com/res/emoji/love.gif",
+        "http://demo.csjlive.com/res/emoji/long.gif",
+        "http://demo.csjlive.com/res/emoji/jyly.gif",
+        "http://demo.csjlive.com/res/emoji/happy.gif",
+        "http://demo.csjlive.com/res/emoji/hand.gif",
+        "http://demo.csjlive.com/res/emoji/daji.gif",
+        "http://demo.csjlive.com/res/emoji/bnhh.gif",
+        "http://demo.csjlive.com/res/emoji/blbq.gif",
+    ],
     getUrl(path) {
         return this.ip + path;
     },

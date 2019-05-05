@@ -4,13 +4,13 @@
     <div class="give-gift">
       <div class="gg-outter">
         <ul class="gg-inner">
-          <li class="gg-item" v-for="(value,idx) in gift" :key="idx" @click="onGiftSelect(idx)">
+          <li class="gg-item" v-for="(value,idx) in list" :key="idx" @click="onGiftSelect(idx)">
             <img
-              src="../../assets/img/effect/effect_05.png"
+              :src="value.image"
               :class="{'border-select':idx==select,'border-unselect':idx!=select}"
             >
-            <p>{{value.title}}</p>
-            <p>{{value.cost}}</p>
+            <p>{{value.blessing}}</p>
+            <p>{{value.money}}</p>
           </li>
         </ul>
       </div>
@@ -40,39 +40,16 @@ export default {
       desc: "",
       gift: [
         {
-          link: "",
-          title: "一场流星雨",
-          cost: "$999.99"
-        },
-        {
-          link: "",
-          title: "一场流星雨",
-          cost: "$999.99"
-        },
-        {
-          link: "",
-          title: "一场流星雨",
-          cost: "$999.99"
-        },
-        {
-          link: "",
-          title: "一场流星雨",
-          cost: "$999.99"
-        },
-        {
-          link: "",
-          title: "一场流星雨",
-          cost: "$999.99"
-        },
-        {
-          link: "",
-          title: "一场流星雨",
-          cost: "$999.99"
-        },
-        {
-          link: "",
-          title: "一场流星雨",
-          cost: "$999.99"
+          animation: "tianshi",
+          blessing: "百年好合",
+          createtime: 1554978631,
+          id: 1,
+          image: "http://demo.csjlive.com/res/gift/effect_tianshi.png",
+          order: 1,
+          reward: 0,
+          status: "0",
+          title: "tianshi",
+          type: "0"
         }
       ]
     };
@@ -86,14 +63,21 @@ export default {
     },
     giveGift(ev) {
       let _this = this;
+      let gift = this.curGift;
       let msg = IM.getBaseMsg(msgType.gift);
-      msg.title = giftTitle.xin;
-      msg.img = config.getResUrl(config.gift, "effect_" + giftTitle.xin);
-      msg.animation = giftTitle.aishen;
+      msg.title = gift.title;
+      // msg.img = config.getResUrl(config.gift, "effect_" + giftTitle.xin);
+      msg.img = gift.image;
+      msg.animation = gift.animation;
       IM.sendMsg(msg).then(function(data) {
         _this.$emit("send-msg", data);
         _this.$emit("close", "give");
       });
+    }
+  },
+  computed: {
+    curGift() {
+      return this.list[this.select];
     }
   },
   mounted() {

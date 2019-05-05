@@ -59,9 +59,9 @@ const Global = {
     appSecret: null,
 
     init() {
-        let liveId = utils.getUrlParams("liveid");
+        let liveId = utils.getUrlParams("liveId");
         if (liveId) this.liveId = liveId;
-        utils.log("liveid:", this.liveId);
+        utils.log("liveId:", this.liveId);
         this.login();
         IM.init();
     },

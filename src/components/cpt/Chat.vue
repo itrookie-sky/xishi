@@ -10,10 +10,10 @@
       <div class="chat-inner">
         <chat-item v-for="(item,index) in chatList" :key="index" :msg="item"></chat-item>
       </div>
-      <div class="chat-an" v-show="anShow">
-        <component :is="anCom" @an-complete="anShowHandler"></component>
-      </div>
     </section>
+    <div class="chat-an" v-show="anShow">
+      <component :is="anCom" @an-complete="anShowHandler"></component>
+    </div>
     <!-- 聊天输入 -->
     <section class="chat-func">
       <el-input
@@ -27,13 +27,14 @@
       <div class="cf-sent iconfont icon-icon_sent" @click="onSentTap($event)"></div>
       <div class="cf-exp iconfont icon-biaoqing2" @click="onBiaoqingTap($event)"></div>
       <div class="cf-camera iconfont icon-xiangji" @click="onCameraTap($event)"></div>
-      <div class="cf-img iconfont icon-jiahao" @click="onImgTap($event)" @tap="onImgTap($event)"></div>
+      <div class="cf-img iconfont icon-saoyisao3" @click="onSaoTap($event)"></div>
     </section>
     <rank v-show="showRank" @close="mgrShow" :is-small="true" :people="rankList"></rank>
     <sign-in v-show="showSignIn" @close="mgrShow"></sign-in>
     <hongbao v-show="showHongBao" @close="mgrShow" @send-msg="onPanelMsg"></hongbao>
     <chat-hongbao v-show="showChatHongbao" @close="mgrShow"></chat-hongbao>
     <give v-show="showGive" @close="mgrShow" :list="giftList" @send-msg="onPanelMsg"></give>
+    <exp v-show="showExp" @close="mgrShow" @send-msg="onPanelMsg"></exp>
   </div>
 </template>
 <script>
@@ -44,6 +45,7 @@ import SignIn from "./SignIn.vue";
 import Hongbao from "./Hongbao.vue";
 import ChatHongbao from "./ChatHongbao.vue";
 import Give from "./Give.vue";
+import Expression from "./Expression.vue";
 import ChatItem from "./ChatItem.vue";
 import IM from "../../js/chat/chat.js";
 import g from "../../js/global.js";
@@ -61,7 +63,8 @@ export default {
     hongbao: Hongbao,
     "chat-hongbao": ChatHongbao,
     give: Give,
-    "chat-item": ChatItem
+    "chat-item": ChatItem,
+    exp: Expression
   },
   data() {
     return {
@@ -71,6 +74,7 @@ export default {
       showHongBao: false,
       showChatHongbao: false,
       showGive: false,
+      showExp: false,
       chatList: [],
       giftList: [],
       anShow: false,
@@ -131,15 +135,7 @@ export default {
       });
     },
     onBiaoqingTap(ev) {
-      let _this = this;
-      let msg = IM.getBaseMsg(
-        msgType.emoji,
-        config.getResUrl(config.emoji, "daji", ".gif")
-      );
-      IM.sendMsg(msg).then(function(data) {
-        _this.chatInput = "";
-        _this.chatList.push(data);
-      });
+      this.showExp = true;
     },
     onCameraTap(ev) {
       let _this = this;
@@ -157,6 +153,9 @@ export default {
           _this.sendImg(url);
         }
       });
+    },
+    onSaoTap(ev) {
+      weixin.scanQRCode();
     },
     sendImg(url) {
       let _this = this;
@@ -207,6 +206,9 @@ export default {
         case "give":
           this.showGive = false;
           break;
+        case "exp":
+          this.showExp = false;
+          break;
       }
     }
   },
@@ -250,7 +252,6 @@ export default {
         .then(function(resp) {
           if (resp.data.success) {
             var data = resp.data.data;
-            
           }
         });
     });
@@ -303,14 +304,14 @@ export default {
       width: 100%;
       min-height: 120%;
     }
-    .chat-an {
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      z-index: 8;
-    }
+  }
+  .chat-an {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 8;
   }
   /**聊天输入区*/
   .chat-func {
