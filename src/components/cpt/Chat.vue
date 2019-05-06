@@ -8,7 +8,12 @@
     <div class="cm-hongbao iconfont icon-ai-hongbao" @click="onHongBaoTap($event)"></div>
     <section class="chat-outter">
       <div class="chat-inner">
-        <chat-item v-for="(item,index) in chatList" :key="index" :msg="item"></chat-item>
+        <chat-item
+          v-for="(item,index) in chatList"
+          :key="index"
+          :msg="item"
+          @chat-item-msg="onChatItemMsg"
+        ></chat-item>
       </div>
     </section>
     <div class="chat-an" v-show="anShow">
@@ -32,7 +37,7 @@
     <rank v-show="showRank" @close="mgrShow" :is-small="true" :people="rankList"></rank>
     <sign-in v-show="showSignIn" @close="mgrShow"></sign-in>
     <hongbao v-show="showHongBao" @close="mgrShow" @send-msg="onPanelMsg"></hongbao>
-    <chat-hongbao v-show="showChatHongbao" @close="mgrShow"></chat-hongbao>
+    <chat-hongbao v-show="showChatHongbao" @close="mgrShow" :hongbaoMsg="chatHongbaoData"></chat-hongbao>
     <give v-show="showGive" @close="mgrShow" :list="giftList" @send-msg="onPanelMsg"></give>
     <exp v-show="showExp" @close="mgrShow" @send-msg="onPanelMsg"></exp>
   </div>
@@ -79,7 +84,11 @@ export default {
       giftList: [],
       anShow: false,
       anCom: null,
-      rankList: []
+      rankList: [],
+      chatHongbaoData: {
+        lsit: [],
+        receive: {}
+      }
     };
   },
   methods: {
@@ -95,7 +104,11 @@ export default {
         .then(function(resp) {
           if (resp.data.success) {
             _this.showRank = true;
-            _this.rankList = resp.data.data;
+            _this.rankList = resp.data.data.map(function(val) {
+              val.nickname = decodeURI(val.nickname);
+              return val;
+            });
+            utils.log("%[rank]排行榜数据处理", "color:green", _this.rankList);
           }
         });
     },
@@ -118,7 +131,7 @@ export default {
         })
         .then(function(resp) {
           if (resp.data.success) {
-            _this.giftList = resp.data.list;
+            _this.giftList = resp.data.data.list;
           }
         });
     },
@@ -188,6 +201,11 @@ export default {
       this.anShow = false;
       this.anCom = null;
     },
+    onChatItemMsg(data) {
+      utils.log("%c[chat item msg]", "color:green", data);
+      this.chatHongbaoData = data;
+      this.showChatHongbao = true;
+    },
     /**界面管理 */
     mgrShow(params) {
       switch (params) {
@@ -252,6 +270,13 @@ export default {
         .then(function(resp) {
           if (resp.data.success) {
             var data = resp.data.data;
+            if (data.list.length) {
+              _this.chatList = [];
+              for (let i = 0; i < data.list.length; i++) {
+                let chat = data.list[i];
+                _this.chatList.push(JSON.parse(chat.content));
+              }
+            }
           }
         });
     });

@@ -57,6 +57,8 @@ var AppConfig = {
     wxSign: "/v1/user/getSignPackage",
     /**发送红包 */
     sendHongbao: "/v1/user/sendHongbao",
+    /**打开红包 */
+    openHongbao:"/v1/user/receiveHongbao",
     /**表情地址列表 */
     expression: [
         "http://demo.csjlive.com/res/emoji/xqxa.gif",

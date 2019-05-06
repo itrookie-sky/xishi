@@ -19,6 +19,8 @@
   </div>
 </template>
 <script>
+import config from "../../js/config.js";
+import g from "../../js/global.js";
 export default {
   props: {
     msg: Object
@@ -95,7 +97,18 @@ export default {
     }
   },
   methods: {
-    onHongbaoTap(e) {}
+    onHongbaoTap(e) {
+      var _this = this;
+      this.$post(config.getUrl(config.openHongbao), {
+        openId: g.openId,
+        liveId: g.liveId,
+        orderNo: _this.hongbaoId
+      }).then(function(resp) {
+        if (resp.data.success) {
+          _this.$emit("chat-item-msg", resp.data.data);
+        }
+      });
+    }
   }
 };
 </script>

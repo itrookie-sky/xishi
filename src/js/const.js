@@ -31,3 +31,8 @@ export const weixinResp = {
     payCancel: "chooseWXPay:cancel",
     payFail: "chooseWXPay:fail",
 }
+
+export const labType = {
+    man: "man",
+    woman: "woman"
+}

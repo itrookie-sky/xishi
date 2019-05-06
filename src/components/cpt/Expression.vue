@@ -6,11 +6,10 @@
         <div
           class="exp-item"
           v-for="(url,index) in expList"
-          @click="onSelect($event)"
           :key="index"
           :data-idx="index"
         >
-          <img :src="url">
+          <img :src="url"  @click="onSelect($event)">
         </div>
       </div>
     </div>

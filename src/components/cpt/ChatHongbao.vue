@@ -1,5 +1,5 @@
 <template>
-  <div class="chat-hongbao">
+  <div class="chat-open-hongbao">
     <div class="ch-new" v-show="state==1">
       <div class="iconfont icon-iconclose" @click="onCloseTap($event)"></div>
       <img src="../../assets/img/hongbao/hongbao_03.png">
@@ -16,7 +16,7 @@
         <span class="text-bg-yellow">{{name}}</span>
         <span>的红包</span>
         <br>
-        <span class="font-small">红包已经被抢走了</span>
+        <span class="font-small">红包已经被抢光了</span>
       </p>
 
       <p class="con-btn" @click="onHongbaoRecord($event)">红包详情</p>
@@ -41,28 +41,95 @@
         <p>请到我的余额进行提现</p>
       </div>
     </div>
+    <div class="money-record" v-show="showRecord" @click.capture.stop="onRecordClose($event)">
+      <div class="mr-outter">
+        <ul class="mr-list">
+          <li v-for="(item,idx) in parsedRecord" :key="idx" class="color-red">
+            <p>{{item.createtime}}</p>
+            <p>
+              <span>{{item.nickname}}</span>
+              <span>抢到了</span>
+              <span>{{item.price}}</span>
+            </p>
+          </li>
+        </ul>
+      </div>
+    </div>
   </div>
 </template>
 <script>
+import utils from "../../js/utils.js";
 export default {
+  props: {
+    hongbaoMsg: Object
+  },
   data() {
     return {
-      name: "三个字",
-      state: 3,
-      money: 9999
+      id: "",
+      name: "",
+      state: 2,
+      money: 0,
+      record: [],
+      num: 0,
+      blessing: "",
+      /**红包 1中奖 0每中*/
+      status: 0,
+      receiveNum: 0,
+      showRecord: false
     };
   },
+  watch: {
+    hongbaoMsg: function(v) {
+      this.state = 1;
+      this.record = this.hongbaoMsg.list;
+      this.num = this.hongbaoMsg.info.num;
+      this.status = this.hongbaoMsg.receive.status;
+      this.receiveNum = this.hongbaoMsg.info.receiveNum;
+      if (this.hongbaoMsg.receive.status == 1) {
+        this.id = this.hongbaoMsg.receive.bag_id;
+        this.name = this.hongbaoMsg.receive.sendName;
+        this.money = this.hongbaoMsg.receive.price;
+      } else {
+        this.money = this.hongbaoMsg.info.price;
+        this.blessing = this.hongbaoMsg.info.blessing;
+        this.name = this.hongbaoMsg.info.sendName;
+      }
+    }
+  },
+  computed: {
+    parsedRecord() {
+      return this.record.map(function(value) {
+        value.createtime = utils.time.getYMDHMSByTimestamp(value.createtime);
+        return value;
+      });
+    }
+  },
   methods: {
-    onOpenTap(ev) {},
+    onOpenTap(ev) {
+      this.state = this.status == 1 ? 3 : 2;
+    },
     onCloseTap(ev) {
+      this.showRecord = false;
       this.$emit("close", "chatHongbao");
     },
-    onHongbaoRecord(ev) {}
+    onHongbaoRecord(ev) {
+      if (!this.record || !this.record.length) {
+        this.$message({
+          message: "暂无记录",
+          type: "warning"
+        });
+        return;
+      }
+      this.showRecord = true;
+    },
+    onRecordClose(ev) {
+      this.showRecord = false;
+    }
   }
 };
 </script>
-<style scoped lang="scss">
-.chat-hongbao {
+<style  lang="scss">
+.chat-open-hongbao {
   position: fixed;
   z-index: 6;
   left: 0;
@@ -76,6 +143,7 @@ export default {
     font-size: 0.18rem;
   }
   .text-bg-yellow {
+    z-index: 6;
     background-color: #dd9b2b;
     font-size: 0.12rem;
     padding: 0.026rem 0.1rem;
@@ -196,6 +264,42 @@ export default {
         background-color: $xs-color-theme1;
         border-radius: 0.03rem;
       }
+    }
+  }
+  .money-record {
+    position: fixed;
+    left: 10%;
+    right: 10%;
+    bottom: 10%;
+    height: 3rem;
+    background-color: #fff;
+    border: 0.015rem solid $xs-color-theme1;
+    border-radius: 0.05rem;
+    padding: 0.2rem 0 0.24rem 0.24rem;
+    z-index: 7;
+    text-align: left;
+    font-size: 0.14rem;
+
+    .mr-outter {
+      width: 100%;
+      height: 100%;
+      overflow-x: hidden;
+      overflow-y: scroll;
+      .mr-list {
+        li {
+          margin-top: 0.1rem;
+          :nth-child(2) {
+            font-size: 0.13rem;
+          }
+        }
+      }
+    }
+
+    .color-gray {
+      color: $xs-color-gray2;
+    }
+    .color-red {
+      color: $xs-color-font;
     }
   }
 }
