@@ -181,6 +181,7 @@ export default {
               _this.people = data.visit_num + "";
               _this.progress = data.exponent.man.percent;
               g.chatRoomId = resp.data.data.chat;
+              _this.setVideoSrc(resp.data.data.video);
               IM.open();
             } else {
             }
