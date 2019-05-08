@@ -16,7 +16,13 @@
       </div>
     </div>
     <div class="give-input">
-      <el-input v-model="name" placeholder="输入姓名"></el-input>
+      <el-input-number
+        v-model="count"
+        controls-position="right"
+        @change="handleChange"
+        :min="1"
+        :max="999"
+      ></el-input-number>
     </div>
     <div class="give-input">
       <el-input v-model="desc" placeholder="默认祝福语"></el-input>
@@ -25,10 +31,12 @@
   </div>
 </template>
 <script>
+import utils from "../../js/utils";
 import config from "../../js/config.js";
 import IM from "../../js/chat/chat.js";
 import g from "../../js/global.js";
-import { msgType, giftTitle } from "../../js/const.js";
+import { msgType, giftTitle, weixinResp } from "../../js/const.js";
+import weixin from "../../js/weixin.js";
 export default {
   props: {
     list: Array
@@ -38,6 +46,7 @@ export default {
       select: 0,
       name: "",
       desc: "",
+      count: 1,
       gift: [
         {
           animation: "tianshi",
@@ -49,7 +58,8 @@ export default {
           reward: 0,
           status: "0",
           title: "tianshi",
-          type: "0"
+          type: "0",
+          money: 0.01
         }
       ]
     };
@@ -62,6 +72,37 @@ export default {
       this.select = idx;
     },
     giveGift(ev) {
+      var _this = this;
+      this.$post(config.getUrl(config.sendGift), {
+        openId: g.openId,
+        liveId: g.liveId,
+        giftId: _this.curGift.id,
+        money: _this.curGift.money,
+        num: _this.count,
+        name: g.userInfo.nickname,
+        blessing: _this.desc
+      }).then(function(resp) {
+        if (resp.data.success) {
+          var payData = resp.data.data;
+          utils.log("%c[wx pay] 礼物调用支付", "color:blue");
+          weixin
+            .pay(
+              payData.timeStamp,
+              payData.nonceStr,
+              payData.prepay_id,
+              payData.paySign
+            )
+            .then(function(pay) {
+              switch (pay.errMsg) {
+                case weixinResp.payOk:
+                  _this.sendGift();
+                  break;
+              }
+            });
+        }
+      });
+    },
+    sendGift(ev) {
       let _this = this;
       let gift = this.curGift;
       let msg = IM.getBaseMsg(msgType.gift);
@@ -73,7 +114,8 @@ export default {
         _this.$emit("send-msg", data);
         _this.$emit("close", "give");
       });
-    }
+    },
+    handleChange(ev) {}
   },
   computed: {
     curGift() {

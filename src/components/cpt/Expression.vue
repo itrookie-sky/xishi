@@ -3,13 +3,8 @@
     <div class="exp-close-btn iconfont icon-cha" @click="onClose($event)"></div>
     <div class="exp-outter">
       <div class="exp-inner">
-        <div
-          class="exp-item"
-          v-for="(url,index) in expList"
-          :key="index"
-          :data-idx="index"
-        >
-          <img :src="url"  @click="onSelect($event)">
+        <div class="exp-item" v-for="(url,index) in expList" :key="index" :data-idx="index">
+          <img :src="url" @click="onSelect($event)">
         </div>
       </div>
     </div>
@@ -54,13 +49,13 @@ export default {
 
   border: 0.015rem solid $xs-color-theme1;
   border-radius: 0.05rem;
-  background-color: #fff;
+  background-color: $xs-color-theme1;
   padding: 0.12rem 0 0 0;
   .exp-close-btn {
     position: absolute;
     top: 0.04rem;
     right: 0.06rem;
-    color: $xs-color-font;
+    color: #fff;
     z-index: 6;
   }
   .exp-outter {
@@ -82,7 +77,6 @@ export default {
           width: 95%;
           height: 1.1rem;
           margin: 0 auto;
-          background-color: #fff;
         }
       }
     }

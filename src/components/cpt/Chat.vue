@@ -35,7 +35,7 @@
       <div class="cf-img iconfont icon-saoyisao3" @click="onSaoTap($event)"></div>
     </section>
     <rank v-show="showRank" @close="mgrShow" :is-small="true" :people="rankList"></rank>
-    <sign-in v-show="showSignIn" @close="mgrShow"></sign-in>
+    <sign-in v-show="showSignIn" @close="mgrShow" :signNumData="signNumData"></sign-in>
     <hongbao v-show="showHongBao" @close="mgrShow" @send-msg="onPanelMsg"></hongbao>
     <chat-hongbao v-show="showChatHongbao" @close="mgrShow" :hongbaoMsg="chatHongbaoData"></chat-hongbao>
     <give v-show="showGive" @close="mgrShow" :list="giftList" @send-msg="onPanelMsg"></give>
@@ -88,7 +88,8 @@ export default {
       chatHongbaoData: {
         lsit: [],
         receive: {}
-      }
+      },
+      signNumData: {}
     };
   },
   methods: {
@@ -104,17 +105,26 @@ export default {
         .then(function(resp) {
           if (resp.data.success) {
             _this.showRank = true;
-            _this.rankList = resp.data.data.map(function(val) {
+            _this.rankList = resp.data.data;/* .map(function(val) {
               val.nickname = decodeURI(val.nickname);
               return val;
-            });
+            }); */
             utils.log("%[rank]排行榜数据处理", "color:green", _this.rankList);
           }
         });
     },
     onXinTap(ev) {},
+    /**打开签到界面 */
     onSignInTap(ev) {
-      this.showSignIn = true;
+      var _this = this;
+      this.$post(config.getUrl(config.signInData), {
+        liveId: g.liveId
+      }).then(function(resp) {
+        if (resp.data.success) {
+          _this.signNumData = resp.data.data;
+          _this.showSignIn = true;
+        }
+      });
     },
     onRenTap(ev) {
       this.$router.replace("/money");
@@ -262,8 +272,8 @@ export default {
 
       _this
         .$post(config.getUrl(config.getChatList), {
-          openId: g.liveId,
-          liveId: g.openId,
+          openId: g.openId,
+          liveId: g.liveId,
           page: 0,
           page_size: 50
         })
@@ -272,7 +282,7 @@ export default {
             var data = resp.data.data;
             if (data.list.length) {
               _this.chatList = [];
-              for (let i = 0; i < data.list.length; i++) {
+              for (let i = data.list.length - 1; i >= 0; i--) {
                 let chat = data.list[i];
                 _this.chatList.push(JSON.parse(chat.content));
               }

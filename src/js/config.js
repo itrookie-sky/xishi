@@ -58,12 +58,23 @@ var AppConfig = {
     /**发送红包 */
     sendHongbao: "/v1/user/sendHongbao",
     /**打开红包 */
-    openHongbao:"/v1/user/receiveHongbao",
+    openHongbao: "/v1/user/receiveHongbao",
+    /**送礼物 */
+    sendGift: "/v1/chat/sendGift",
+    /**签到进度 */
+    signInData: "/v1/signInData",
+    /**提现 */
+    cashOut:"/v1/user/cashOut",
+    /** 准备抽奖*/
+    prizeReady: "/v1/screen/ready",
+    /**抽奖页面 */
+    luckDraw: "/v1/screen/luckDraw",
+    /** 全部中奖名单*/
+    allPrizePeople: "/v1/screen/winner",
     /**表情地址列表 */
     expression: [
         "http://demo.csjlive.com/res/emoji/xqxa.gif",
         "http://demo.csjlive.com/res/emoji/ttmm.gif",
-        "http://demo.csjlive.com/res/emoji/syah.gif",
         "http://demo.csjlive.com/res/emoji/ssss.gif",
         "http://demo.csjlive.com/res/emoji/marr-me.gif",
         "http://demo.csjlive.com/res/emoji/love.gif",
@@ -74,6 +85,7 @@ var AppConfig = {
         "http://demo.csjlive.com/res/emoji/daji.gif",
         "http://demo.csjlive.com/res/emoji/bnhh.gif",
         "http://demo.csjlive.com/res/emoji/blbq.gif",
+        "http://demo.csjlive.com/res/emoji/yyah.gif"
     ],
     getUrl(path) {
         return this.ip + path;

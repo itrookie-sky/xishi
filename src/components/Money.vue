@@ -18,6 +18,9 @@
           <el-button type="primary" size="mini" @click="onGetMoneyTap($event)">提现</el-button>
         </el-col>
         <el-col :span="6">
+          <el-button type="primary" size="mini" @click="onGetAll($event)">全部提现</el-button>
+        </el-col>
+        <el-col :span="6">
           <el-button @click="onRecordTap($event)" type="primary" size="mini">余额详情</el-button>
         </el-col>
       </el-row>
@@ -132,8 +135,63 @@ export default {
     onMoneyRecordTap(ev) {
       this.showRecord = false;
     },
+    sendMoney(value) {
+      var _this = this;
+      this.$post(config.getUrl(config.cashOut), {
+        openId: g.openId,
+        liveId: g.liveId,
+        money: +value
+      }).then(function(resp) {
+        if (resp.data.success) {
+          _this.$message({
+            type: "success",
+            message: "提现成功" + value + "元"
+          });
+        } else {
+          _this.$message({
+            type: "warning",
+            message: resp.data.message
+          });
+        }
+      });
+    },
     onGetMoneyTap(ev) {
-      this.state = 2;
+      var _this = this;
+      this.$prompt("请输入金额", "提现", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        inputPattern: /^[1-9]\d*\.\d*|0\.\d*[1-9]\d*|[1-9]\d*$/g,
+        inputErrorMessage: "请输入数字"
+      })
+        .then(({ value }) => {
+          /*  this.$message({
+            type: "success",
+            message: "输入余额" + value
+          }); */
+          _this.sendMoney(value);
+        })
+        .catch(() => {
+          _this.$message({
+            type: "info",
+            message: "取消输入"
+          });
+        });
+    },
+    onGetAll(ev) {
+      var _this = this;
+      this.$confirm("此操作将所有余额提现, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消"
+      })
+        .then(() => {
+          _this.sendMoney(this.money);
+        })
+        .catch(() => {
+          _this.$message({
+            type: "info",
+            message: "已取消"
+          });
+        });
     },
     onBackTap(ev) {
       this.$router.replace("/live");

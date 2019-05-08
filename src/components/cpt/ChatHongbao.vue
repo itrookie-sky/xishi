@@ -4,7 +4,7 @@
       <div class="iconfont icon-iconclose" @click="onCloseTap($event)"></div>
       <img src="../../assets/img/hongbao/hongbao_03.png">
       <p>
-        <span class="text-bg-yellow">{{name}}</span>
+        <span class="text-bg-yellow">{{nickName}}</span>
         <span>给你发了个红包</span>
       </p>
       <div class="cn-btn" @click="onOpenTap($event)"></div>
@@ -13,7 +13,7 @@
       <div class="iconfont icon-iconclose" @click="onCloseTap($event)"></div>
       <img src="../../assets/img/hongbao/hongbao_02.png">
       <p class="con-hongbao">
-        <span class="text-bg-yellow">{{name}}</span>
+        <span class="text-bg-yellow">{{nickName}}</span>
         <span>的红包</span>
         <br>
         <span class="font-small">红包已经被抢光了</span>
@@ -24,7 +24,7 @@
     <div class="ch-open-success" v-show="state==3">
       <div class="iconfont icon-chahao" @click="onCloseTap($event)"></div>
       <p class="cos-hongbao">
-        <span class="text-bg-yellow">{{name}}</span>
+        <span class="text-bg-yellow">{{nickName}}</span>
         <span>的红包</span>
         <br>
       </p>
@@ -98,10 +98,16 @@ export default {
   },
   computed: {
     parsedRecord() {
+      if (!this.record) return [];
       return this.record.map(function(value) {
         value.createtime = utils.time.getYMDHMSByTimestamp(value.createtime);
+        // value.nickname = decodeURI(value.nickname);
         return value;
       });
+    },
+    nickName() {
+      // return decodeURI(this.name);
+      return this.name;
     }
   },
   methods: {

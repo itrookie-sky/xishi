@@ -100,6 +100,9 @@ import utils from "../../js/utils";
 import config from "../../js/config.js";
 import g from "../../js/global.js";
 export default {
+  props: {
+    signNumData: Object
+  },
   data() {
     return {
       person: [],
@@ -119,6 +122,19 @@ export default {
       labelPosition: "left",
       complete: false
     };
+  },
+  watch: {
+    signNumData: function(newData, oldData) {
+      let labs = [];
+      let all = this.signNumData.allNum;
+      let num = this.signNumData.siginNum;
+      let first = Math.floor((all * 100) / 4);
+      this.progressCur = Math.floor((num * 100) / (all * 100));
+      for (let i = 1; i <= 4; i++) {
+        labs.push(Math.round(first / 100) * i);
+      }
+      this.progressTabs = labs;
+    }
   },
   computed: {
     startTime() {
