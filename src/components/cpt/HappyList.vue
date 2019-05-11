@@ -1,45 +1,89 @@
 <template>
   <div class="happy-container">
     <div class="happy-inner">
-      <div class="happy-item" @click="onClick">
-        <img src="../../assets/img/effect/animations/effect_xingqiu.png">
-        <h4>仪式全程</h4>
-      </div>
-      <div class="happy-item">
-        <img src="../../assets/img/effect/animations/effect_xingqiu.png">
-        <h4>仪式全程</h4>
-      </div>
-      <div class="happy-item">
-        <img src="../../assets/img/effect/animations/effect_xingqiu.png">
-        <h4>仪式全程</h4>
-      </div>
-      <div class="happy-item">
-        <img src="../../assets/img/effect/animations/effect_xingqiu.png">
-        <h4>仪式全程</h4>
-      </div>
-      <div class="happy-item">
-        <img src="../../assets/img/effect/animations/effect_xingqiu.png">
-        <h4>仪式全程</h4>
-      </div>
-      <div class="happy-item">
-        <img src="../../assets/img/effect/animations/effect_xingqiu.png">
-        <h4>仪式全程</h4>
+      <div class="happy-item" @click="onClick(idx)" v-for="(val,idx) in list" :key="idx">
+        <img :src="val.img">
+        <h4>{{val.title}}</h4>
       </div>
     </div>
   </div>
 </template>
 <script>
+import utils from "../../js/utils";
+import config from "../../js/config.js";
+import g from "../../js/global.js";
 export default {
   data() {
     return {
+      list: [
+        {
+          id: 5,
+          live_id: 1000,
+          title: "ceshi5",
+          type: "url",
+          img: "http://pic32.nipic.com/20130823/13339320_183302468194_2.jpg",
+          file_url: "http://video.znj.com/v/yingyonjq0772.mp4",
+          label: null,
+          created: 1557028353,
+          is_del: 0
+        },
+        {
+          id: 5,
+          live_id: 1000,
+          title: "ceshi5",
+          type: "url",
+          img: "http://pic32.nipic.com/20130823/13339320_183302468194_2.jpg",
+          file_url: "http://video.znj.com/v/yingyonjq0772.mp4",
+          label: null,
+          created: 1557028353,
+          is_del: 0
+        },
+        {
+          id: 5,
+          live_id: 1000,
+          title: "ceshi5",
+          type: "url",
+          img: "http://pic32.nipic.com/20130823/13339320_183302468194_2.jpg",
+          file_url: "http://video.znj.com/v/yingyonjq0772.mp4",
+          label: null,
+          created: 1557028353,
+          is_del: 0
+        }
+      ],
+      pageInfo: {
+        pageNum: 1,
+        pageSize: 30,
+        count: 5
+      },
       testRes:
         "http://video.changlive.com/d1/584720825510/vod_video/1540370426307/A9TUQS.m3u8"
     };
   },
   methods: {
-    onClick() {
-      this.$emit("video-src", this.testRes);
+    onClick(idx) {
+      // this.$emit("video-src", this.testRes);
+      var info = this.list[idx];
+      this.$emit("video-src", info.file_url);
     }
+  },
+  mounted() {
+    var _this = this;
+    this.$nextTick(function() {
+      _this
+        .$post(config.getUrl(config.happy), {
+          openId: g.openId,
+          liveId: g.liveId,
+          page: 1,
+          page_size: 50
+        })
+        .then(function(resp) {
+          var data = resp.data.data;
+          if (resp.data.success) {
+            this.list = data.list;
+            this.pageInfo = data.page;
+          }
+        });
+    });
   }
 };
 </script>

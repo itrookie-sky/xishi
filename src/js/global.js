@@ -64,6 +64,7 @@ const Global = {
         utils.log("liveId:", this.liveId);
         this.login();
         IM.init();
+        utils.time.init();
     },
 
     login() {

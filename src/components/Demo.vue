@@ -16,12 +16,12 @@
       <el-button type="success" @click="onIMQuit($event)">退出聊天室</el-button>
       <el-button type="success" @click="onIMrg($event)">聊天注册</el-button>
       <el-button type="success" @click="onAlert($event)">点击弹窗</el-button>
-      <el-button type="success" @click="onMsg($event)">点击消息</el-button>
+      <el-button type="success" @click="onMsg($event)">点击消息</el-button>-->
       <el-button type="success" @click="onHappy($event)">请求幸福时刻列表</el-button>
       <el-button type="success" @click="onRank($event)">请求排行榜</el-button>
       <el-button type="success" @click="getWXAcc($event)">请求微信签名</el-button>
       <el-button type="success" @click="onHongbaoSend($event)">发送微信红包</el-button>
-      <el-button type="success" @click="onGive($event)">请求礼物列表</el-button>-->
+      <el-button type="success" @click="onGive($event)">请求礼物列表</el-button>
       <el-button type="success" @click="onBig($event)">大屏请求测试</el-button>
     </div>
   </div>
@@ -261,9 +261,13 @@ export default {
       });
     },
     onBig(ev) {
-      post(conf.getUrl(conf.prizeReady), { liveId: g.liveId });
+      /* post(conf.getUrl(conf.prizeReady), { liveId: g.liveId });
       post(conf.getUrl(conf.luckDraw), { liveId: g.liveId });
-      post(conf.getUrl(conf.allPrizePeople), { liveId: g.liveId });
+      post(conf.getUrl(conf.allPrizePeople), { liveId: g.liveId }); */
+      post(conf.getUrl(conf.bigLogin), {
+        liveId: g.liveId,
+        password: "123456"
+      });
     }
   }
 };

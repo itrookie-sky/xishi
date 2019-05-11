@@ -37,10 +37,61 @@ class Storage {
 }
 
 class TimeParse {
+
+    constructor() {//constructor是一个构造方法，用来接收参数
+        this.map = [];
+        this.timeId = 0;
+    }
+
+    init() {
+        if (this.timeId) clearInterval(this.timeId);
+        var _this = this;
+        this.timeId = setInterval(function () {
+            _this.update();
+        }, 2000);
+    }
+
+    update() {
+        if (!this.map.length) return;
+        this.map.forEach((val, idx) => {
+            val.func.call(val.thisObj);
+        });
+    }
+
+    rgTimer(func, thisObj) {
+        if (this.find(func, thisObj)) return;
+        let timer = {
+            func: func,
+            thisObj: thisObj
+        };
+        this.map.push(timer);
+    }
+
+    rmTimer(func, thisObj) {
+        let timer = this.find(func, thisObj);
+        if (timer) {
+            let idx = this.map.indexOf(timer);
+            this.map.splice(idx, 1);
+            return true;
+        }
+        return false;
+    }
+
+    find(func, thisObj) {
+        let item;
+        for (let i = 0; i < this.map.length; i++) {
+            item = this.map[i];
+            if (item.thisObj == thisObj && item.func == func) {
+                return item;
+            }
+        }
+        return null;
+    }
+
     /**
- * 获取00d00h00m00s
- * @returns {string}
- */
+     * 获取00d00h00m00s
+     * @returns {string}
+     */
     getTimeStr(sec) {
         sec = sec < 0 ? 0 : sec;
         let d = Math.floor(sec / 86400);

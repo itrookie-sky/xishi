@@ -62,15 +62,17 @@ var AppConfig = {
     /**送礼物 */
     sendGift: "/v1/chat/sendGift",
     /**签到进度 */
-    signInData: "/v1/signInData",
+    signInData: "/v1/user/signInData",
     /**提现 */
-    cashOut:"/v1/user/cashOut",
+    cashOut: "/v1/user/cashOut",
     /** 准备抽奖*/
     prizeReady: "/v1/screen/ready",
     /**抽奖页面 */
     luckDraw: "/v1/screen/luckDraw",
     /** 全部中奖名单*/
     allPrizePeople: "/v1/screen/winner",
+    /**大屏登录 */
+    bigLogin: "/v1/screen/login",
     /**表情地址列表 */
     expression: [
         "http://demo.csjlive.com/res/emoji/xqxa.gif",

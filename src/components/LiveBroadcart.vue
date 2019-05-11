@@ -163,12 +163,32 @@ export default {
     setVideoSrc(src) {
       utils.log("%c[video src] 视频播放地址切换", "color:green", src);
       this.player.src(src);
+    },
+    updateHomeValue() {
+      var _this = this;
+      this.$post(config.getUrl(config.exponent), {
+        openId: g.openId,
+        liveId: g.liveId,
+        page_size: 5
+      }).then(function(resp) {
+        if (resp.data.success) {
+          var data = resp.data.data;
+          _this.people = data.seeNum;
+          _this.progress = data.man_count;
+        }
+      });
     }
+  },
+  beforeDestroy() {
+    var _this = this;
+    utils.time.rmTimer(_this.updateHomeValue, _this);
+    utils.log("移除轮询");
   },
   mounted: function() {
     var _this = this;
 
     this.$nextTick(function() {
+      utils.time.rgTimer(_this.updateHomeValue, _this);
       _this
         .$post(config.getUrl(config.live), {
           openId: g.openId,

@@ -5,8 +5,8 @@
       <div class="rs-btn iconfont icon-jiahao3" @click="onOpenClick($event)"></div>
       <div class="rank-outter">
         <ul class="rank-list">
-          <li class="rank-item" v-for="(val,idx) in people" :key="idx">
-            <div class="ri-progress" :style="{'width':val.num+'%'}"></div>
+          <li class="rank-item" v-for="(val,idx) in rankList" :key="idx">
+            <div class="ri-progress" :style="{'width':val.num/top1*100+'%'}"></div>
             <div class="ri-text">
               <span>Top{{idx+1}}</span>
               <span>{{val.nickname}}</span>
@@ -28,8 +28,8 @@
       <div class="ra-close-btn iconfont icon-cha" @click="onClose($event)"></div>
       <el-tabs v-model="activeName" type="border-card" @tab-click="handleClick">
         <el-tab-pane label="全部排名" name="first">
-          <div class="rank-item" v-for="(val,idx) in people" :key="idx">
-            <div class="ri-progress" :style="{'width':val.num+'%'}"></div>
+          <div class="rank-item" v-for="(val,idx) in rankList" :key="idx">
+            <div class="ri-progress" :style="{'width':val.num/top1*100+'%'}"></div>
             <div class="ri-text">
               <span>Top{{idx+1}}</span>
               <span>{{val.nickname}}</span>
@@ -39,7 +39,7 @@
         </el-tab-pane>
         <el-tab-pane label="新郎天团排名" name="second">
           <div class="rank-item" v-for="(val,idx) in manList" :key="idx">
-            <div class="ri-progress" :style="{'width':val.num+'%'}"></div>
+            <div class="ri-progress" :style="{'width':val.num/topMan*100+'%'}"></div>
             <div class="ri-text">
               <span>Top{{idx+1}}</span>
               <span>{{val.nickname}}</span>
@@ -49,7 +49,7 @@
         </el-tab-pane>
         <el-tab-pane label="喜娘天团排名" name="third">
           <div class="rank-item" v-for="(val,idx) in womanList" :key="idx">
-            <div class="ri-progress" :style="{'width':val.num+'%'}"></div>
+            <div class="ri-progress" :style="{'width':val.num/topWoman*100+'%'}"></div>
             <div class="ri-text">
               <span>Top{{idx+1}}</span>
               <span>{{val.nickname}}</span>
@@ -86,6 +86,10 @@ export default {
     return {
       showSmall: this.isSmall,
       activeName: "first",
+      top1: 120,
+      topMan: 100,
+      topWoman: 80,
+      rankList: [],
       mineRank: { top: 16, name: "最多七个字", content: "1111万", pro: 80 },
       test: [
         {
@@ -115,22 +119,10 @@ export default {
   },
   computed: {
     manList() {
-      var list = [];
-      for (let item of this.people) {
-        if (item.type == labType.man) {
-          list.push(item);
-        }
-      }
-      return list;
+      return this.people.man;
     },
     womanList() {
-      var list = [];
-      for (let item of this.people) {
-        if (item.type == labType.woman) {
-          list.push(item);
-        }
-      }
-      return list;
+      return this.people.woman;
     }
   },
   methods: {
@@ -142,6 +134,31 @@ export default {
       this.$emit("close", "rank");
     },
     handleClick(tab, event) {}
+  },
+  watch: {
+    people() {
+      function sortTop(a, b) {
+        return b - a;
+      }
+      var _this = this;
+      var man = this.people.man;
+      var woman = this.people.woman;
+      var top = man.concat(woman);
+
+      if (top.length > 0) {
+        this.top1 = top.sort(sortTop)[0].num || 0;
+      }
+      if (man.length > 0) {
+        this.topMan = man.sort(sortTop)[0].num || 0;
+      }
+      if (woman.length > 0) {
+        this.topWoman = woman.sort(sortTop)[0].num || 0;
+      }
+
+      this.rankList = top;
+      utils.log("排行榜排序", top, man, woman);
+      utils.log("排行榜排序", this.top1, this.man, this.woman);
+    }
   },
   mounted() {}
 };

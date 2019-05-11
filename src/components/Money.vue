@@ -77,7 +77,7 @@ import utils from "../js/utils";
 export default {
   data() {
     return {
-      money: 99999.99,
+      money: 0.0,
       desc: [
         "提现到账后,将直接转入微信钱包中",
         "提现时会收取5%的手续费",
@@ -147,6 +147,7 @@ export default {
             type: "success",
             message: "提现成功" + value + "元"
           });
+          _this.postAmount();
         } else {
           _this.$message({
             type: "warning",
@@ -159,9 +160,9 @@ export default {
       var _this = this;
       this.$prompt("请输入金额", "提现", {
         confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        inputPattern: /^[1-9]\d*\.\d*|0\.\d*[1-9]\d*|[1-9]\d*$/g,
-        inputErrorMessage: "请输入数字"
+        cancelButtonText: "取消"
+        /*   inputPattern: /^[1-9]\d*\.\d*|0\.\d*[1-9]\d*|[1-9]\d*$/g,
+        inputErrorMessage: "请输入数字" */
       })
         .then(({ value }) => {
           /*  this.$message({
@@ -204,27 +205,30 @@ export default {
     },
     onPass(ev) {
       this.state = 1;
+    },
+    postAmount() {
+      var _this = this;
+
+      _this
+        .$post(config.getUrl(config.amount), {
+          openId: g.openId,
+          liveId: g.liveId
+        })
+        .then(function(resp) {
+          if (resp.data.success) {
+            _this.money = resp.data.data.amount;
+            let log = resp.data.data.log;
+            for (let i = 0; i < log.length; i++) {
+              let item = log[i];
+              item.created = utils.time.getYMDHMSByTimestamp(item.created);
+            }
+            _this.record = log;
+          }
+        });
     }
   },
   mounted() {
-    var _this = this;
-
-    _this
-      .$post(config.getUrl(config.amount), {
-        openId: g.openId,
-        liveId: g.liveId
-      })
-      .then(function(resp) {
-        if (resp.data.success) {
-          _this.money = resp.data.data.amount;
-          let log = resp.data.data.log;
-          for (let i = 0; i < log.length; i++) {
-            let item = log[i];
-            item.created = utils.time.getYMDHMSByTimestamp(item.created);
-          }
-          _this.record = log;
-        }
-      });
+    this.postAmount();
   }
 };
 </script>

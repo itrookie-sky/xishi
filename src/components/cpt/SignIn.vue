@@ -185,7 +185,7 @@ export default {
               _this
                 .$post(config.getUrl(config.sendVCode), {
                   openId: g.openId,
-                  phone: _this.tel,
+                  phone: _this.formAlign.tel,
                   fCode: resp.data.data.fCode
                 })
                 .then(function(_resp) {
