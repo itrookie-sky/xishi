@@ -12,6 +12,7 @@ var AppConfig = {
 
     isDebug: true,
     wxDebug: true,
+    showPanelMenu:true,
     /**微信appid*/
     appid: "wx41e6ffacc036a4da",
     /**微信秘钥 */
@@ -65,6 +66,8 @@ var AppConfig = {
     signInData: "/v1/user/signInData",
     /**提现 */
     cashOut: "/v1/user/cashOut",
+    /**点赞 */
+    liked: "/v1/chat/liked",
     /** 准备抽奖*/
     prizeReady: "/v1/screen/ready",
     /**抽奖页面 */
@@ -73,6 +76,8 @@ var AppConfig = {
     allPrizePeople: "/v1/screen/winner",
     /**大屏登录 */
     bigLogin: "/v1/screen/login",
+    /**大屏扫码登录 */
+    bigSigin: "/v1/screen/sigin",
     /**表情地址列表 */
     expression: [
         "http://demo.csjlive.com/res/emoji/xqxa.gif",

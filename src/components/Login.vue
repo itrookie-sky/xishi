@@ -104,6 +104,7 @@ export default {
             });
             _this.logined = resp.data.success;
             if (resp.data.success) {
+              var data = resp.data.data;
               _this.global.live = resp.data.data.live;
               _this.global.chatRoomId = resp.data.data.live.chat;
               _this.guideParsed = resp.data.data.labels;

@@ -230,7 +230,12 @@ const Utils = {
         this.log(val + ":" + pa);
         return pa;
     },
-
+    getStrParams(val, str) {
+        let re = new RegExp("" + val + "=([^&?]*)", "ig");
+        let pa = ((str.match(re)) ? (str.match(re)[0].substr(val.length + 1)) : null);
+        this.log(val + ":" + pa);
+        return pa;
+    }
 };
 
 

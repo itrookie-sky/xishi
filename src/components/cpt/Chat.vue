@@ -1,7 +1,8 @@
 <template>
   <div class="chat-container">
     <div class="cm-top iconfont icon-htmal5icon35" @click="onTopTap($event)"></div>
-    <div class="cm-xin iconfont icon-xin" @click="onXinTap($event)"></div>
+    <!-- <div class="cm-xin iconfont icon-xin" @click="onXinTap($event)"></div> -->
+    <zan></zan>
     <div class="cm-sign-in iconfont icon-qiandao1" @click="onSignInTap($event)"></div>
     <div class="cm-ren iconfont icon-ren12" @click="onRenTap($event)"></div>
     <div class="cm-liwu iconfont icon-liwu2" @click="onLiwuTap($event)"></div>
@@ -52,6 +53,7 @@ import ChatHongbao from "./ChatHongbao.vue";
 import Give from "./Give.vue";
 import Expression from "./Expression.vue";
 import ChatItem from "./ChatItem.vue";
+import Zan from "./Zan.vue";
 import IM from "../../js/chat/chat.js";
 import g from "../../js/global.js";
 import { msgType, giftTitle } from "../../js/const.js";
@@ -69,7 +71,8 @@ export default {
     "chat-hongbao": ChatHongbao,
     give: Give,
     "chat-item": ChatItem,
-    exp: Expression
+    exp: Expression,
+    zan: Zan
   },
   data() {
     return {
@@ -105,7 +108,8 @@ export default {
         .then(function(resp) {
           if (resp.data.success) {
             _this.showRank = true;
-            _this.rankList = resp.data.data;/* .map(function(val) {
+            _this.rankList =
+              resp.data.data; /* .map(function(val) {
               val.nickname = decodeURI(val.nickname);
               return val;
             }); */
@@ -113,7 +117,20 @@ export default {
           }
         });
     },
-    onXinTap(ev) {},
+    onXinTap(ev) {
+      var _this = this;
+      this.$post(config.getUrl(config.liked), {
+        liveId: g.liveId,
+        openId: g.openId
+      }).then(function(resp) {
+        if (resp.data.success) {
+          _this.$message({
+            message: "点赞成功",
+            type: "success"
+          });
+        }
+      });
+    },
     /**打开签到界面 */
     onSignInTap(ev) {
       var _this = this;
@@ -178,7 +195,26 @@ export default {
       });
     },
     onSaoTap(ev) {
-      weixin.scanQRCode();
+      var _this = this;
+      weixin.scanQRCode().then(function(resultStr) {
+        let liveId = utils.getStrParams("liveId", resultStr);
+        if (liveId == g.liveId) {
+          _this
+            .$post(config.getUrl(config.bigSigin), {
+              liveId: g.liveId,
+              openId: g.openId
+            })
+            .then(function(resp) {
+              if (resp.data.success) {
+                utils.log("%c[big sigin]大屏签到成功", "color:green");
+                _this.$message({
+                  type: "success",
+                  message: "现场签到成功"
+                });
+              }
+            });
+        }
+      });
     },
     sendImg(url) {
       let _this = this;

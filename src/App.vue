@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <div class="menu" @click="onMenuClick">{{showMenuCom}}</div>
+    <div class="menu" @click="onMenuClick" v-show="showMenuBtn">{{showMenuCom}}</div>
     <ul v-show="showMenu" class="test-menu">
       <li v-for="(item,index) in testList" :key="index">
         <router-link :to="item.link">{{item.desc}}</router-link>
@@ -13,12 +13,14 @@
 <script>
 import utils from "./js/utils.js";
 import g from "./js/global.js";
+import config from "./js/config.js"
 export default {
   name: "App",
   data: function() {
     return {
       testList: g.testMenu,
-      showMenu: false
+      showMenu: false,
+      showMenuBtn: config.showPanelMenu
     };
   },
   methods: {

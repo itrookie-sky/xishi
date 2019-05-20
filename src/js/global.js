@@ -95,7 +95,8 @@ const Global = {
             utils.log("code 获取成功", code);
             this.code = code;
             post(config.getUrl(config.getUserInfo), {
-                wxCode: code
+                wxCode: code,
+                liveId: self.liveId
             }).then(function (resp) {
                 if (resp.data.success) {
                     var data = resp.data.data;
@@ -105,6 +106,7 @@ const Global = {
                         self.userInfo = data;
                         self.openId = data.openid;
                         //请求签名
+                        if (utils.getUrlParams("dao") == 1) self.bigSigin();
                         post(config.getUrl(config.wxSign), {
                             openId: self.openId,
                             liveId: self.liveId,
@@ -129,6 +131,17 @@ const Global = {
         } else {
             wx.wxAccess();
         }
+    },
+    bigSigin() {
+        var self = this;
+        post(config.getUrl(config.bigSigin), {
+            liveId: self.liveId,
+            openId: self.openId
+        }).then(function (resp) {
+            if (resp.data.success) {
+                utils.log("%c[big sigin]大屏签到成功", "color:green");
+            }
+        });
     },
     testMenu: [{
         link: "/",
