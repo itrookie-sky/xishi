@@ -2,7 +2,7 @@
   <div class="happy-container">
     <div class="happy-inner">
       <div class="happy-item" @click="onClick(idx)" v-for="(val,idx) in list" :key="idx">
-        <img :src="val.img">
+        <img :src="val.image">
         <h4>{{val.title}}</h4>
       </div>
     </div>
@@ -21,7 +21,7 @@ export default {
           live_id: 1000,
           title: "ceshi5",
           type: "url",
-          img: "http://pic32.nipic.com/20130823/13339320_183302468194_2.jpg",
+          image: "http://pic32.nipic.com/20130823/13339320_183302468194_2.jpg",
           file_url: "http://video.znj.com/v/yingyonjq0772.mp4",
           label: null,
           created: 1557028353,
@@ -79,8 +79,8 @@ export default {
         .then(function(resp) {
           var data = resp.data.data;
           if (resp.data.success) {
-            this.list = data.list;
-            this.pageInfo = data.page;
+            _this.list = data.list;
+            _this.pageInfo = data.page;
           }
         });
     });

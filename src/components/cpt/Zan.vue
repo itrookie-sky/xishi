@@ -127,7 +127,7 @@ export default {
     right: 0;
   }
   .fade-enter-to {
-    animation: fadein 0.5s;
+    animation: fadein 0.4s;
   }
   .fade-enter-active,
   .fade-leave-active {

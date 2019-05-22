@@ -118,7 +118,7 @@ export default {
             type: "application/x-mpegURL"
           }
         ],
-        poster: "", //你的封面地址
+        poster: g.live.cover_image, //你的封面地址
         width: document.documentElement.clientWidth,
         height: 300,
         notSupportedMessage: "此视频暂无法播放，请稍后再试", //允许覆盖Video.js无法播放媒体源时显示的默认信息。
@@ -188,7 +188,7 @@ export default {
     var _this = this;
 
     this.$nextTick(function() {
-      utils.time.rgTimer(_this.updateHomeValue, _this);
+      utils.time.rgTimer(_this.updateHomeValue, _this, 2000);
       _this
         .$post(config.getUrl(config.live), {
           openId: g.openId,

@@ -11,7 +11,9 @@ const Global = {
     code: "",
     utils: utils,
     config: config,
-    userInfo: {},
+    userInfo: {
+        password: 1
+    },
     userLabel: "1",
     liveId: "1000",
     IMpassword: "xishi123456",
@@ -20,6 +22,7 @@ const Global = {
         "id": 1000,
         "name": "吴奇隆与刘诗诗结婚现场",
         "company_id": 1000,
+        "cover_image": "/uploads/20190521/160f7b02007b5bf1e5d36793a2e465d6.png",
         "man": "吴奇隆",
         "man_tel": "13800138000",
         "man_count": 0,
@@ -55,6 +58,7 @@ const Global = {
         "createtime": 1548257460,
         "is_del": "0"
     }, //直播界面数据初始化
+    curLabel:[],
     chatRoomId: "78895638446081",
     appSecret: null,
 

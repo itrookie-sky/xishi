@@ -2,7 +2,7 @@
   <div class="login">
     <img class="logo" src="../assets/img/guide/guide_03.png">
     <div class="login-content" v-show="!logined">
-      <div class="login-form">
+      <div class="login-form" v-show="hasPassword">
         <span class="iconfont icon-lock login-icon"></span>
         <input
           class="login-input"
@@ -16,7 +16,7 @@
       <div class="line"></div>
       <div class="login-btn" v-on:click="onLogin($event)">
         <span class="iconfont icon-bofang pos-center"></span>
-        <span class="pos-center">登录</span>
+        <span class="pos-center">{{countDown}}</span>
       </div>
     </div>
     <div class="lab-container" v-show="logined">
@@ -35,6 +35,7 @@ import guide from "@/components/GuideSelect";
 import g from "../js/global.js";
 import conf from "../js/config.js";
 import { localKey, router } from "../js/const.js";
+import config from "../js/chat/webim.config";
 export default {
   components: {
     "guide-lab-list": guide
@@ -43,7 +44,8 @@ export default {
     return {
       password: "123456",
       logined: false,
-      guideList: g.testGuideList
+      guideList: g.testGuideList,
+      countDown: "登录"
     };
   },
   computed: {
@@ -83,18 +85,20 @@ export default {
 
         this.guideList = data;
       }
+    },
+    hasPassword() {
+      return g.userInfo.password == 1;
     }
   },
   methods: {
     onLogin: function(ev) {
       utils.log(this.password);
       var _this = this;
-      if (this.password == "") return;
 
       this.$post(conf.getUrl(conf.login), {
         openId: g.openId,
         liveId: g.liveId,
-        passWord: this.password
+        passWord: this.hasPassword ? this.password : ""
       })
         .then(function(resp) {
           if (resp.status == 200) {
@@ -104,25 +108,72 @@ export default {
             });
             _this.logined = resp.data.success;
             if (resp.data.success) {
+              //登录成功
               var data = resp.data.data;
               _this.global.live = resp.data.data.live;
               _this.global.chatRoomId = resp.data.data.live.chat;
               _this.guideParsed = resp.data.data.labels;
               utils.storage.setData(localKey.pw, _this.password);
+              if (data.curLabel && data.curLabel.length > 0) {
+                g.curLabel = data.curLabel;
+                g.userLabel = data.curLabel[0].id;
+                _this.onHadCurLab();
+              }
+            } else {
+              //登录失败
+              _this.$message({
+                message: resp.data.message,
+                type: "warning"
+              });
+              _this.countDown = resp.data.data.countDownTime;
             }
-          } else {
-            utils.log("请求失败", resp.status);
           }
         })
         .catch(function(err) {
           utils.log(err);
         });
+    },
+    onHadCurLab: function(ev) {
+      let self = this;
+      this.$post(conf.getUrl(conf.setLabel), {
+        openId: this.global.openId,
+        liveId: this.global.liveId,
+        labelId: g.curLabel[0].id
+      })
+        .then(function(resp) {
+          if (resp.status == 200) {
+            self.loginedHandler();
+          } else {
+            utils.log("请求失败", resp.status);
+          }
+        })
+        .catch(function(err) {
+          self.global.utils.log(err);
+        });
+    },
+    loginedHandler() {
+      let g = this.global;
+      this.$router.push(router.live);
+    },
+    updateTimer() {
+      var count = +this.countDown;
+      if (count > 0) {
+        count--;
+        this.countDown = count;
+      } else {
+        this.countDown = "登录";
+      }
     }
+  },
+  beforeDestroy() {
+    var _this = this;
+    utils.time.rmTimer(_this.updateTimer, _this);
   },
   mounted() {
     var _this = this;
     _this.password = utils.storage.getData(localKey.pw) || "";
     this.logined = false;
+    utils.time.rgTimer(this.updateTimer, this);
   }
 };
 </script>

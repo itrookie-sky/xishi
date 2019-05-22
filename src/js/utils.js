@@ -43,18 +43,36 @@ class TimeParse {
         this.timeId = 0;
     }
 
+    now() {
+        if (!Date.now) {
+            Date.now = function now() {
+                return new Date().getTime();
+            };
+        }
+        return Date.now();
+    }
+
     init() {
         if (this.timeId) clearInterval(this.timeId);
         var _this = this;
         this.timeId = setInterval(function () {
             _this.update();
-        }, 2000);
+        }, 120);
     }
 
     update() {
+        var _this = this;
         if (!this.map.length) return;
+        var now = this.now();
         this.map.forEach((val, idx) => {
-            val.func.call(val.thisObj);
+            if (val.thisObj.curTimer) {
+                if (now - val.thisObj.curTimer >= val.timeDiff) {
+                    val.thisObj.curTimer = now;
+                    val.func.call(val.thisObj);
+                }
+            } else {
+                val.thisObj.curTimer = now;
+            }
         });
     }
 
@@ -62,7 +80,8 @@ class TimeParse {
         if (this.find(func, thisObj)) return;
         let timer = {
             func: func,
-            thisObj: thisObj
+            thisObj: thisObj,
+            timeDiff: arguments[2] ? arguments[2] : 1000//更新频率默认 单位ms 默认 10000ms
         };
         this.map.push(timer);
     }
