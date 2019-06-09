@@ -25,7 +25,9 @@ const jsApiList = [
     "getLocalImgData",
     "chooseImage",
     "uploadImage",
-    "scanQRCode"
+    "scanQRCode",
+    "updateAppMessageShareData",
+    "updateTimelineShareData"
 ];
 
 class Weixin {
@@ -254,6 +256,37 @@ class Weixin {
                     resolve(res.resultStr);
                 }
             });
+        });
+    }
+
+    /**微信分享 */
+    shareUpdate() {
+        post(config.getUrl(config.shareLink), {
+            liveId: g.liveId,
+            openId: g.openId
+        }).then(function (resp) {
+            if (resp.data.success) {
+                var data = resp.data.data;
+                wx.updateAppMessageShareData({
+                    title: data.title, // 分享标题
+                    desc: data.desc, // 分享描述
+                    link: data.link, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+                    imgUrl: data.logo, // 分享图标
+                    success: function () {
+                        // 设置成功
+                        utils.log("%c[wx updateAppMessageShareData]", "color:green", data);
+                    }
+                });
+                wx.updateTimelineShareData({
+                    title: data.title, // 分享标题
+                    link: data.link, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+                    imgUrl: data.logo, // 分享图标
+                    success: function () {
+                        // 设置成功
+                        utils.log("%c[wx updateTimelineShareData]", "color:green", data);
+                    }
+                })
+            }
         });
     }
 }

@@ -153,7 +153,7 @@ export default {
         .$post(config.getUrl(config.giftList), {
           openId: g.openId,
           liveId: g.liveId,
-          page: 1,
+          page: 0,//页码0 请求最后n条记录
           page_size: 50
         })
         .then(function(resp) {

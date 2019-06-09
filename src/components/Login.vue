@@ -58,14 +58,14 @@ export default {
           {
             id: "1",
             type: "man",
-            desc: "新郎",
+            desc: g.live.man,
             title: require("../assets/img/guide/guide_07.png"),
             labList: []
           },
           {
             id: "2",
             type: "woman",
-            desc: "新娘",
+            desc: g.live.woman,
             title: require("../assets/img/guide/guide_09.png"),
             labList: []
           }
@@ -87,7 +87,7 @@ export default {
       }
     },
     hasPassword() {
-      return g.userInfo.password == 1;
+      return +g.userInfo.password == 1;
     }
   },
   methods: {
@@ -171,9 +171,13 @@ export default {
   },
   mounted() {
     var _this = this;
-    _this.password = utils.storage.getData(localKey.pw) || "";
-    this.logined = false;
+
+    this.logined = true;
     utils.time.rgTimer(this.updateTimer, this);
+
+    this.$nextTick(function() {
+      _this.password = utils.storage.getData(localKey.pw) || "";
+    });
   }
 };
 </script>

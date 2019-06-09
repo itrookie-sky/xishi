@@ -5,7 +5,7 @@
       <p>{{guideData.desc}}</p>
     </div>
     <div class="lab-list border-0">
-      <div class="lab-item" :class="{'bg-white':select}">上一次选择</div>
+      <!-- <div class="lab-item" :class="{'bg-white':select}">上一次选择</div> -->
       <div class="lab-container" :class="{'con-select':select}">
         <label v-show="select" @click="onMoreClick">{{guideData.desc+"更多标签"}}</label>
         <div class="iconfont icon-shangjiantou" v-show="select"></div>

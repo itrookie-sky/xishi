@@ -12,7 +12,7 @@ var AppConfig = {
 
     isDebug: true,
     wxDebug: true,
-    showPanelMenu:true,
+    showPanelMenu: true,
     /**微信appid*/
     appid: "wx41e6ffacc036a4da",
     /**微信秘钥 */
@@ -78,6 +78,14 @@ var AppConfig = {
     bigLogin: "/v1/screen/login",
     /**大屏扫码登录 */
     bigSigin: "/v1/screen/sigin",
+    /**绑定新人 */
+    newFormCode: "/v1/user/newFormCode",
+    /**发送短信验证码 */
+    newSendVCode: "/v1/user/newSendVCode",
+    /** 绑定新人*/
+    newVerification: "/v1/user/newVerification",
+    /**微信分享数据 */
+    shareLink: "/v1/user/shareLink",
     /**表情地址列表 */
     expression: [
         "http://demo.csjlive.com/res/emoji/xqxa.gif",

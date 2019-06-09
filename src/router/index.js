@@ -4,6 +4,7 @@ import Demo from '@/components/Demo'
 import Login from '@/components/Login'
 import LiveBroadcart from '@/components/LiveBroadcart'
 import Money from '@/components/Money'
+import Binding from "@/components/Binding"
 
 Vue.use(Router);
 
@@ -28,6 +29,11 @@ export default new Router({
       path: '/money',
       name: 'Money',
       component: Money
-    }
+    },
+    {
+      path: '/binding',
+      name: 'Binding',
+      component: Binding
+    },
   ]
 })

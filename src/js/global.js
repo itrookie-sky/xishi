@@ -16,6 +16,7 @@ const Global = {
     },
     userLabel: "1",
     liveId: "1000",
+    onlyCode: "",
     IMpassword: "xishi123456",
     hongbaoId: 1000,//发送红包生成ID
     live: {
@@ -58,13 +59,17 @@ const Global = {
         "createtime": 1548257460,
         "is_del": "0"
     }, //直播界面数据初始化
-    curLabel:[],
+    curLabel: [],
     chatRoomId: "78895638446081",
     appSecret: null,
+    shareInfo: null,
 
     init() {
         let liveId = utils.getUrlParams("liveId");
+        let onlyCode = utils.getUrlParams("onlyCode");
         if (liveId) this.liveId = liveId;
+        if (onlyCode) this.onlyCode = onlyCode;
+
         utils.log("liveId:", this.liveId);
         this.login();
         IM.init();
@@ -123,6 +128,7 @@ const Global = {
                                     self.appSecret.nonceStr,
                                     self.appSecret.signature
                                 );
+                                weixin.shareUpdate();
                             }
                         });
                     }
@@ -160,6 +166,9 @@ const Global = {
     }, {
         link: "/money",
         desc: "余额",
+    }, {
+        link: "/binding",
+        desc: "绑定页",
     }
     ],
     testGuideList: [{

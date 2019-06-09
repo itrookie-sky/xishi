@@ -6,6 +6,19 @@
         <h4>{{val.title}}</h4>
       </div>
     </div>
+    <div class="page-menu">
+      <el-pagination
+        small
+        layout="prev, pager, next"
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        @prev-click="handlePrev"
+        @next-click="handleNext"
+        :current-page.sync="currentPage"
+        :total="pageCount"
+        :page-size="pageSize"
+      ></el-pagination>
+    </div>
   </div>
 </template>
 <script>
@@ -56,7 +69,10 @@ export default {
         count: 5
       },
       testRes:
-        "http://video.changlive.com/d1/584720825510/vod_video/1540370426307/A9TUQS.m3u8"
+        "http://video.changlive.com/d1/584720825510/vod_video/1540370426307/A9TUQS.m3u8",
+      currentPage: 1,
+      pageSize: 6,
+      pageCount: 2
     };
   },
   methods: {
@@ -64,25 +80,52 @@ export default {
       // this.$emit("video-src", this.testRes);
       var info = this.list[idx];
       this.$emit("video-src", info.file_url);
-    }
-  },
-  mounted() {
-    var _this = this;
-    this.$nextTick(function() {
+    },
+    handleSizeChange(val) {
+      utils.log("[幸福时刻列表 handleSizeChange]", val);
+      this.pageInfoHandler(val);
+    },
+    handleCurrentChange(val) {
+      utils.log("[幸福时刻列表 handleCurrentChange]", val);
+      this.pageInfoHandler(val);
+    },
+    handlePrev(val) {
+      utils.log("[幸福时刻列表 handlePrev]", val);
+      this.pageInfoHandler(val);
+    },
+    handleNext(val) {
+      utils.log("[幸福时刻列表 handleNext]", val);
+      this.pageInfoHandler(val);
+    },
+    /**
+     *  "page": {
+            "pageNum": 1,
+            "pageSize": 30,
+            "count": 5
+        }
+     */
+    pageInfoHandler(curPage) {
+      var _this = this;
       _this
         .$post(config.getUrl(config.happy), {
           openId: g.openId,
           liveId: g.liveId,
-          page: 1,
-          page_size: 50
+          page: curPage,
+          page_size: _this.pageSize
         })
         .then(function(resp) {
           var data = resp.data.data;
           if (resp.data.success) {
             _this.list = data.list;
-            _this.pageInfo = data.page;
+            _this.pageCount = data.page.count;
           }
         });
+    }
+  },
+  mounted() {
+    var _this = this;
+    this.$nextTick(function() {
+      _this.pageInfoHandler(1);
     });
   }
 };
@@ -115,6 +158,12 @@ export default {
         color: #fff;
       }
     }
+  }
+  .page-menu {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
   }
 }
 </style>

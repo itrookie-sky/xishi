@@ -3,6 +3,7 @@
     <div class="rank-small" v-if="showSmall">
       <h4 @click="onClose($event)">排行榜</h4>
       <div class="rs-btn iconfont icon-jiahao3" @click="onOpenClick($event)"></div>
+      <div class="ra-close-btn iconfont icon-cha" @click="onClose($event)"></div>
       <div class="rank-outter">
         <ul class="rank-list">
           <li class="rank-item" v-for="(val,idx) in rankList" :key="idx">
@@ -58,14 +59,6 @@
           </div>
         </el-tab-pane>
       </el-tabs>
-      <!-- <div class="rank-item rank-item-mine">
-        <div class="ri-progress" :style="{'width':mineRank.pro+'%'}"></div>
-        <div class="ri-text">
-          <span>Top{{mineRank.top}}</span>
-          <span>{{mineRank.name}}</span>
-          <span>{{mineRank.content}}</span>
-        </div>
-      </div>-->
     </div>
   </div>
 </template>
@@ -138,7 +131,7 @@ export default {
   watch: {
     people() {
       function sortTop(a, b) {
-        return b - a;
+        return +b.num - +a.num;
       }
       var _this = this;
       var man = this.people.man;
@@ -185,7 +178,7 @@ export default {
     .rs-btn {
       position: absolute;
       top: 0;
-      right: 0;
+      left: 0;
     }
     .rank-outter {
       width: 100%;
@@ -195,6 +188,13 @@ export default {
       .rank-list {
         width: 100%;
       }
+    }
+    .ra-close-btn {
+      position: absolute;
+      top: 0.04rem;
+      right: 0.06rem;
+      color: $xs-color-font;
+      z-index: 6;
     }
   }
   .rank-item {
