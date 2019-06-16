@@ -7,13 +7,14 @@
     <div class="cm-ren iconfont icon-ren12" @click="onRenTap($event)"></div>
     <div class="cm-liwu iconfont icon-liwu2" @click="onLiwuTap($event)"></div>
     <div class="cm-hongbao iconfont icon-ai-hongbao" @click="onHongBaoTap($event)"></div>
-    <section class="chat-outter">
-      <div class="chat-inner">
+    <section class="chat-outter" ref="chatOutter">
+      <div class="chat-inner" ref="chatInner">
         <chat-item
           v-for="(item,index) in chatList"
           :key="index"
           :msg="item"
           @chat-item-msg="onChatItemMsg"
+          @chat-img="chatBigImgShow"
         ></chat-item>
       </div>
     </section>
@@ -41,6 +42,7 @@
     <chat-hongbao v-show="showChatHongbao" @close="mgrShow" :hongbaoMsg="chatHongbaoData"></chat-hongbao>
     <give v-show="showGive" @close="mgrShow" :list="giftList" @send-msg="onPanelMsg"></give>
     <exp v-show="showExp" @close="mgrShow" @send-msg="onPanelMsg"></exp>
+    <bigimg :url="bigImgUrl" @close="mgrShow" v-show="showBigImg"></bigimg>
   </div>
 </template>
 <script>
@@ -54,6 +56,7 @@ import Give from "./Give.vue";
 import Expression from "./Expression.vue";
 import ChatItem from "./ChatItem.vue";
 import Zan from "./Zan.vue";
+import BigImg from "./BigImg.vue";
 import IM from "../../js/chat/chat.js";
 import g from "../../js/global.js";
 import { msgType, giftTitle } from "../../js/const.js";
@@ -72,7 +75,8 @@ export default {
     give: Give,
     "chat-item": ChatItem,
     exp: Expression,
-    zan: Zan
+    zan: Zan,
+    bigimg: BigImg
   },
   data() {
     return {
@@ -83,7 +87,29 @@ export default {
       showChatHongbao: false,
       showGive: false,
       showExp: false,
-      chatList: [],
+      showBigImg: false,
+      bigImgUrl: "",
+      chatList: [
+        /*  {
+          from_type: "man",
+          from_name: "冷暖她知",
+          from_headimg:
+            "http://thirdwx.qlogo.cn/mmopen/PiajxSqBRaEJIpicKqxwBVVJgm8m5VP5yJNPLBdSDbz8WFSCtiakRH2kzeeqRThsrg1h5ttfWIFcRQj1pwIKQn4EQ/132",
+          from_label: "1",
+          type: "emoji",
+          content: "http://demo.csjlive.com/res/emoji/ttmm.gif"
+        },
+
+        {
+          from_type: "woman",
+          from_name: "冷暖她知",
+          from_headimg:
+            "http://thirdwx.qlogo.cn/mmopen/PiajxSqBRaEJIpicKqxwBVVJgm8m5VP5yJNPLBdSDbz8WFSCtiakRH2kzeeqRThsrg1h5ttfWIFcRQj1pwIKQn4EQ/132",
+          from_label: "1",
+          type: "emoji",
+          content: "http://demo.csjlive.com/res/emoji/ttmm.gif"
+        } */
+      ],
       giftList: [],
       anShow: false,
       anCom: null,
@@ -92,8 +118,17 @@ export default {
         lsit: [],
         receive: {}
       },
-      signNumData: {}
+      signNumData: {},
+      scrollTimerId: 0
     };
+  },
+  computed: {
+    chatInner: function() {
+      return this.$refs.chatInner;
+    },
+    chatOutter: function() {
+      return this.$refs.chatOutter;
+    }
   },
   methods: {
     /**互动功能 */
@@ -153,7 +188,7 @@ export default {
         .$post(config.getUrl(config.giftList), {
           openId: g.openId,
           liveId: g.liveId,
-          page: 0,//页码0 请求最后n条记录
+          page: 0, //页码0 请求最后n条记录
           page_size: 50
         })
         .then(function(resp) {
@@ -167,11 +202,12 @@ export default {
     },
     /**================聊天相关================= */
     onSentTap(ev) {
+      if (this.chatInput == "") return;
       let _this = this;
       let msg = IM.getBaseMsg(msgType.text, this.chatInput);
       IM.sendMsg(msg).then(function(data) {
         _this.chatInput = "";
-        _this.chatList.push(data);
+        // _this.chatList.push(data);
       });
     },
     onBiaoqingTap(ev) {
@@ -230,8 +266,8 @@ export default {
     },
     onPanelMsg(data) {
       utils.log("接收页面消息", data);
-      this.chatList.push(data);
-      this.parseMsg(data);
+      // this.chatList.push(data);
+      // this.parseMsg(data);
     },
     parseMsg(data) {
       var _this = this;
@@ -241,6 +277,9 @@ export default {
           this.anCom = anConf.config[data.animation];
           break;
       }
+      setTimeout(() => {
+        _this.changeScroll();
+      }, 60);
     },
     anShowHandler(data) {
       utils.log("%c[animation compelet]", "color:green");
@@ -273,7 +312,28 @@ export default {
         case "exp":
           this.showExp = false;
           break;
+        case "bigimg":
+          this.showBigImg = false;
+          break;
       }
+    },
+    /**显示大图 */
+    chatBigImgShow(url) {
+      this.showBigImg = true;
+      this.bigImgUrl = url;
+    },
+    changeScroll() {
+      var _this = this;
+      var innerH = window
+        .getComputedStyle(this.chatInner, null)
+        .height.replace("px", "");
+      var outterH = window
+        .getComputedStyle(this.chatOutter, null)
+        .height.replace("px", "");
+
+      var diffH = innerH - outterH;
+      console.log("[测试滚动用]", diffH);
+      this.chatOutter.scrollTop = diffH * g.getScale();
     }
   },
   mounted: function() {
@@ -322,10 +382,16 @@ export default {
                 let chat = data.list[i];
                 _this.chatList.push(JSON.parse(chat.content));
               }
+              utils.time.rgTimeout(_this.changeScroll, _this, 500);
             }
           }
         });
+      console.log(this.$refs);
     });
+  },
+  beforeDestroy() {
+    var _this = this;
+    utils.time.rmTimeout(this.changeScroll, this);
   }
 };
 </script>

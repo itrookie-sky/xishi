@@ -47,7 +47,7 @@
         <el-form-item label="姓名" label-width=".6rem">
           <el-row type="flex" justify="space-between">
             <el-col :span="16">
-              <el-input v-model="formAlign.name"></el-input>
+              <el-input v-model="formAlign.name" maxlength="14"></el-input>
             </el-col>
             <el-col :span="6">
               <el-select v-model="formAlign.sex" placeholder>
@@ -60,7 +60,7 @@
         <el-form-item label="电话" label-width=".6rem">
           <el-row type="flex" justify="space-between">
             <el-col :span="15">
-              <el-input v-model="formAlign.tel"></el-input>
+              <el-input v-model="formAlign.tel" type="number" maxlength="11"></el-input>
             </el-col>
             <el-col :span="9">
               <label class="sf-code-lab" @click="getfCode">获取验证码</label>
@@ -68,7 +68,7 @@
           </el-row>
         </el-form-item>
         <el-form-item label="短信验证码">
-          <el-input v-model="formAlign.code"></el-input>
+          <el-input v-model="formAlign.code" type="number" maxlength="6"></el-input>
         </el-form-item>
         <el-form-item label label-width="0">
           <el-radio-group v-model="formAlign.arrive">
@@ -146,6 +146,7 @@ export default {
   },
   methods: {
     onSubmit(ev) {
+      if (this.checkValues(true)) return;
       var _this = this;
       console.log(_this.formAlign);
       _this
@@ -172,6 +173,7 @@ export default {
       this.$emit("close", "signin");
     },
     getfCode(ev) {
+      if (this.checkValues(false)) return;
       var _this = this;
       _this
         .$post(config.getUrl(config.formCode), {
@@ -220,8 +222,34 @@ export default {
       this.person = person;
       this.start = l.start_time;
       this.end = l.end_time;
-
       this.address = `${l.city} ${l.area} ${l.address}`;
+    },
+    checkValues(checkCode) {
+      if (!this.formAlign.name) {
+        this.$message({
+          message: "请输入姓名",
+          type: "warning"
+        });
+        return true;
+      }
+
+      if (!this.formAlign.tel) {
+        this.$message({
+          message: "请输入正确的手机号码",
+          type: "warning"
+        });
+        return true;
+      }
+
+      if (checkCode && !this.formAlign.code) {
+        this.$message({
+          message: "请输入验证码",
+          type: "warning"
+        });
+        return true;
+      }
+
+      return false;
     }
   },
   mounted() {

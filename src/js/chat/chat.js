@@ -59,7 +59,7 @@ function open() {
  */
 function join() {
     mod.conn.joinChatRoom({
-        roomId: g.chatRoomId
+        roomId: g.live.chat
     });
 }
 
@@ -74,7 +74,7 @@ function sendMsg(data) {
         var send = JSON.stringify(data);
         var option = {
             msg: send, // 消息内容
-            to: g.chatRoomId, // 接收消息对象(群组id)
+            to: g.live.chat, // 接收消息对象(群组id)
             roomType: true, // 群聊类型，true时为聊天室，false时为群组
             success: function (msg) {
                 var obj = {
@@ -102,7 +102,6 @@ function sendMsg(data) {
         mod.conn.send(msg.body);
         utils.log("%c[send msg] 发送消息:", "color:blue", msg.body);
     })
-
 }
 
 /**
@@ -114,6 +113,7 @@ function getBaseMsg(type, cnt) {
         "from_name": g.userInfo.nickname,
         "from_headimg": g.userInfo.headimgurl,
         "from_label": g.userLabel,
+        "from_type": g.curLabel[0] ? g.curLabel[0].type : "man",
         "type": type,
         "content": cnt || ""
     }

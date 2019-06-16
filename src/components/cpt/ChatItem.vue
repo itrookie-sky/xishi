@@ -4,8 +4,8 @@
       <img class="head-img" :src="headSrc">
       <p class="nick">{{nick}}</p>
     </div>
-    <div class="ci-outter">
-      <div class="ci-triangle"></div>
+    <div class="ci-outter" :style="{'backgroundColor':sexColor}">
+      <div class="ci-triangle" :style="{'borderColor':borderColor}"></div>
       <div class="chat-text" v-show="state=='text'">{{text}}</div>
       <div class="chat-hongbao" v-show="state=='money'" @click="onHongbaoTap($event)">
         <img class="hb-bg" src="../../assets/img/hongbao/hongbao_11.png">
@@ -13,7 +13,7 @@
         <p class="hb-desc">{{hongbaoDesc}}</p>
       </div>
       <div class="chat-img" v-show="state=='img'||state=='emoji'||state=='gift'">
-        <img :src="imgSrc">
+        <img :src="imgSrc" @click="showBigImg">
       </div>
     </div>
   </div>
@@ -94,6 +94,24 @@ export default {
         desc = this.msg.content;
       }
       return desc;
+    },
+    sexColor() {
+      let womanC = "#e60333";
+      let manC = "#409eff";
+      let result = manC;
+      switch (this.msg.from_type) {
+        case "man":
+          result = manC;
+          break;
+        case "woman":
+          result = womanC;
+          break;
+      }
+      console.log("聊天背景", result, this.msg);
+      return result;
+    },
+    borderColor() {
+      return "transparent " + this.sexColor + " transparent transparent";
     }
   },
   methods: {
@@ -108,6 +126,11 @@ export default {
           _this.$emit("chat-item-msg", resp.data.data);
         }
       });
+    },
+    showBigImg() {
+      if (this.state == "img") {
+        this.$emit("chat-img", this.imgSrc);
+      }
     }
   }
 };

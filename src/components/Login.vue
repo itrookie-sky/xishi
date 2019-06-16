@@ -172,7 +172,7 @@ export default {
   mounted() {
     var _this = this;
 
-    this.logined = true;
+    this.logined = false;
     utils.time.rgTimer(this.updateTimer, this);
 
     this.$nextTick(function() {

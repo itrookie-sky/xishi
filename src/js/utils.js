@@ -41,6 +41,7 @@ class TimeParse {
     constructor() {//constructor是一个构造方法，用来接收参数
         this.map = [];
         this.timeId = 0;
+        this.timeoutMap = [];
     }
 
     now() {
@@ -76,6 +77,35 @@ class TimeParse {
         });
     }
 
+    rgTimeout(func, thisObj, timeNum) {
+        if (this.findTimeout(func, thisObj)) return;
+
+        var self = this;
+        let timer = {
+            func: func,
+            thisObj: thisObj,
+            timerId: 0
+        };
+
+        timer.timerId = setTimeout(() => {
+            timer.func.call(timer.thisObj);
+            self.rmTimeout(timer.func, timer.thisObj);
+        }, timeNum);
+
+        this.timeoutMap.push(timer);
+    }
+
+    rmTimeout(func, thisObj) {
+        let timer = this.findTimeout(func, thisObj);
+        if (timer) {
+            if (timer.timeId) clearTimeout(timer.timeId);
+            let idx = this.timeoutMap.indexOf(timer);
+            this.timeoutMap.splice(idx, 1);
+            return true;
+        }
+        return false;
+    }
+
     rgTimer(func, thisObj) {
         if (this.find(func, thisObj)) return;
         let timer = {
@@ -99,6 +129,17 @@ class TimeParse {
     find(func, thisObj) {
         let item;
         for (let i = 0; i < this.map.length; i++) {
+            item = this.map[i];
+            if (item.thisObj == thisObj && item.func == func) {
+                return item;
+            }
+        }
+        return null;
+    }
+
+    findTimeout(func, thisObj) {
+        let item;
+        for (let i = 0; i < this.timeoutMap.length; i++) {
             item = this.map[i];
             if (item.thisObj == thisObj && item.func == func) {
                 return item;

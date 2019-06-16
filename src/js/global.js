@@ -153,6 +153,10 @@ const Global = {
             }
         });
     },
+    getScale() {
+        const htmlWidth = document.documentElement.clientWidth || document.body.clientWidth;
+        return htmlWidth / 360;
+    },
     testMenu: [{
         link: "/",
         desc: "登录页",

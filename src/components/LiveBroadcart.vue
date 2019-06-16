@@ -8,7 +8,7 @@
       <!--  <video
         id="live-video"
         class="video-js vjs-default-skin live-video"
-        ref="video"
+        ref="videoPlayer"
         controls="controls"
         preload="none"
         poster
@@ -86,6 +86,7 @@ import Chat from "./cpt/Chat.vue";
 import Happy from "./cpt/HappyList.vue";
 import g from "../js/global.js";
 import IM from "../js/chat/chat.js";
+import weixin from "../js/weixin.js";
 import { videoPlayer } from "vue-video-player";
 export default {
   components: {
@@ -186,6 +187,8 @@ export default {
   },
   mounted: function() {
     var _this = this;
+
+    weixin.shareUpdate();
 
     this.$nextTick(function() {
       utils.time.rgTimer(_this.updateHomeValue, _this, 2000);
