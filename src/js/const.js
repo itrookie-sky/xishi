@@ -2,7 +2,7 @@ export const localKey = {
     APP: "@xishi",
     openId: "openId",
     pw: 'password',
-
+    guidelive: "guidelive"
 }
 
 export const router = {

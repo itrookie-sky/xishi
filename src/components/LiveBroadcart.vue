@@ -42,7 +42,7 @@
           <span class="iconfont icon-shuaxin"></span>
           <span>直播</span>
         </div>
-        <div class="active-home">
+        <div class="active-home" @click="onProgressTap">
           <div class="active-top">
             <div>
               <img src="../assets/img/guide/guide_07.png">
@@ -75,6 +75,7 @@
           <component :is="curActiveCpt" @video-src="setVideoSrc"></component>
         </keep-alive>
       </div>
+      <guide-live @close="mgrShow" v-show="showGuideLive"></guide-live>
     </section>
   </div>
 </template>
@@ -88,11 +89,14 @@ import g from "../js/global.js";
 import IM from "../js/chat/chat.js";
 import weixin from "../js/weixin.js";
 import { videoPlayer } from "vue-video-player";
+import GuideLive from "./cpt/GuideLive.vue";
+import { localKey } from "../js/const.js";
 export default {
   components: {
     Chat,
     Happy,
-    videoPlayer
+    videoPlayer,
+    "guide-live": GuideLive
   },
   data() {
     return {
@@ -129,7 +133,8 @@ export default {
           remainingTimeDisplay: true,
           fullscreenToggle: true //全屏按钮
         }
-      }
+      },
+      showGuideLive: false
     };
   },
   computed: {
@@ -178,6 +183,21 @@ export default {
           _this.progress = data.man_count;
         }
       });
+    },
+    mgrShow(params) {
+      switch (params) {
+        case "guidelive":
+          this.showGuideLive = false;
+          break;
+      }
+    },
+    onProgressTap() {
+      this.$message({
+        dangerouslyUseHTMLString: true,
+        showClose: true,
+        message: config.guideliveText,
+        duration: 0
+      });
     }
   },
   beforeDestroy() {
@@ -191,6 +211,8 @@ export default {
     weixin.shareUpdate();
 
     this.$nextTick(function() {
+      _this.showGuideLive = !utils.storage.getData(localKey.guidelive);
+
       utils.time.rgTimer(_this.updateHomeValue, _this, 2000);
       _this
         .$post(config.getUrl(config.live), {

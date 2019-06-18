@@ -17,7 +17,6 @@ export default {
     }
   },
   computed: {},
-  mounted: {}
 };
 </script>
 <style lang="scss">
