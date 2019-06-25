@@ -23,7 +23,8 @@ export const giftTitle = {
     taikong: "taikong",
     liuxing: "liuxing",
     tianshi: "tianshi",
-    xin: "xin"
+    xin: "xin",
+    huahai: "huahai"
 }
 
 export const weixinResp = {

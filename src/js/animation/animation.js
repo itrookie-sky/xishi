@@ -2,6 +2,7 @@ import Vue from "vue"
 import { giftTitle } from "../const.js"
 import an1 from "../../components/animations/animations1.vue";
 import an2 from "../../components/animations/animations2.vue";
+import an3 from "../../components/animations/animations3.vue";
 import an6 from "../../components/animations/animations6.vue";
 import an7 from "../../components/animations/animations7.vue";
 
@@ -14,7 +15,8 @@ var config = {
     [giftTitle.liuxing]: an1,
     [giftTitle.xin]: an2,
     [giftTitle.taikong]: an6,
-    [giftTitle.tianshi]: an7
+    [giftTitle.tianshi]: an7,
+    [giftTitle.huahai]: an3
 }
 
 export default { config: config };

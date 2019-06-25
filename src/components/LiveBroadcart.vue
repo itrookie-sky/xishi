@@ -125,7 +125,7 @@ export default {
         ],
         poster: g.live.cover_image, //你的封面地址
         width: document.documentElement.clientWidth,
-        height: 300,
+        height: "100%",
         notSupportedMessage: "此视频暂无法播放，请稍后再试", //允许覆盖Video.js无法播放媒体源时显示的默认信息。
         controlBar: {
           timeDivider: true,
@@ -264,7 +264,7 @@ export default {
   }
 };
 </script>
-<style scoped lang="scss">
+<style  lang="scss">
 .live-container {
   position: absolute;
   flex-direction: column;
@@ -276,6 +276,9 @@ export default {
   z-index: 1;
   font-size: 0.2rem;
   overflow: hidden;
+  .video-js.vjs-fluid {
+    height: 100%;
+  }
 }
 .live-top {
   width: 100%;
